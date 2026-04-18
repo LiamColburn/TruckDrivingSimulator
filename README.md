@@ -26,21 +26,21 @@ Highway Havoc is an endless runner-style truck driving simulator where players n
 
 ## General Goals for Each Person
 
-### [Person 1 - Gameplay Programming]
+### [Liam - Gameplay Programming]
 - Implement player controller with lane changing mechanics
 - Create collision detection system
 - Develop scoring system (distance + time tracking)
 - Handle game over/restart logic
 - Implement trucker activities (eating, drinking, honking)
 
-### [Person 2 - AI & Procedural Generation]
+### [Matthew - AI & Procedural Generation]
 - Create AI traffic system with random car spawning
 - Implement traffic vehicle movement and pathfinding
 - Design procedural road/map generation system
 - Develop road network with intersections and highways
 - Place environmental props (buildings, trees, street lights)
 
-### [Person 3 - UI/UX & Polish]
+### [Emiliano - UI/UX & Polish]
 - Design and implement game UI (HUD, inventory, score display)
 - Create game over screen with restart functionality
 - Add visual feedback for player actions
@@ -48,7 +48,7 @@ Highway Havoc is an endless runner-style truck driving simulator where players n
 - Create particle effects (explosions, etc.)
 - Polish camera work and visual presentation
 
-### [Person 4 - Art & Animation] *(if applicable)*
+### [Kenny - Art & Animation] *(if applicable)*
 - Create 3D models for truck and traffic vehicles
 - Design environment assets (buildings, trees, road props)
 - Implement vehicle animations
