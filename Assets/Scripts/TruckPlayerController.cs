@@ -1,7 +1,7 @@
 using UnityEngine;
 
 /// <summary>
-/// Truck player controller - Change lanes, eat hotdogs, drink Big Gulps, road beers, and honk
+/// Truck player controller - Change lanes, eat hotdogs, drink Big Gulps, road beers, road cigs, and honk
 /// Now with smooth 2-3 second lane transitions and proper input blocking
 /// </summary>
 public class TruckPlayerController : MonoBehaviour
@@ -34,9 +34,6 @@ public class TruckPlayerController : MonoBehaviour
     
     private AudioSource hornAudioSource;
     
-    // UI Reference (found at runtime)
-    private TruckerUI truckerUI;
-    
     // Internal state
     private bool isEating = false;
     private bool isDrinking = false;
@@ -60,14 +57,14 @@ public class TruckPlayerController : MonoBehaviour
             hornAudioSource = gameObject.AddComponent<AudioSource>();
         }
         
-        // Find TruckerUI if not assigned
-        if (truckerUI == null)
-        {
-            truckerUI = FindObjectOfType<TruckerUI>();
-        }
+        // // Find TruckerUI if not assigned
+        // if (truckerUI == null)
+        // {
+        //     truckerUI = FindObjectOfType<TruckerUI>();
+        // }
         
-        // Update UI
-        UpdateUI();
+        // // Update UI
+        // UpdateUI();
         
         Debug.Log("Truck driver ready! Controls: A/D or Arrow Keys = Change Lanes, H = Hotdog, G = Big Gulp, B = Road Beer, Space = Horn");
     }
@@ -196,7 +193,7 @@ public class TruckPlayerController : MonoBehaviour
         Debug.Log($"Munchin' on a hotdog... ({hotdogsRemaining} left)");
         
         PlaySound(eatSound);
-        UpdateUI();
+        //UpdateUI();
     }
  
     void DrinkBigGulp()
@@ -221,7 +218,7 @@ public class TruckPlayerController : MonoBehaviour
         Debug.Log($"Sippin' on a Big Gulp... ({bigGulpsRemaining} left)");
         
         PlaySound(drinkSound);
-        UpdateUI();
+        //UpdateUI();
     }
  
     void DrinkRoadBeer()
@@ -250,7 +247,7 @@ public class TruckPlayerController : MonoBehaviour
         // Road beers make you drive slightly wonky (optional effect)
         StartCoroutine(RoadBeerEffect());
         
-        UpdateUI();
+        //UpdateUI();
     }
  
     void HonkHorn()
@@ -269,7 +266,7 @@ public class TruckPlayerController : MonoBehaviour
             Debug.Log("*HORN SOUND*");
         }
         
-        UpdateUI();
+        //UpdateUI();
     }
  
     void HandleActivities()
@@ -328,15 +325,7 @@ public class TruckPlayerController : MonoBehaviour
             hornAudioSource.PlayOneShot(clip);
         }
     }
- 
-    void UpdateUI()
-    {
-        if (truckerUI != null)
-        {
-            truckerUI.UpdateInventory(hotdogsRemaining, bigGulpsRemaining, roadBeersRemaining);
-            truckerUI.UpdateStats(hotdogsEaten, bigGulpsDrank, roadBeersDrank, hornsHonked);
-        }
-    }
+
  
     // Public getters for other scripts
     public int GetCurrentLane() => currentLane;
@@ -355,7 +344,7 @@ public class TruckPlayerController : MonoBehaviour
         roadBeersRemaining = 6;
         
         Debug.Log("Restocked at the gas station!");
-        UpdateUI();
+        //UpdateUI();
     }
  
     void OnDrawGizmos()
