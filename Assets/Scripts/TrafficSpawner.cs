@@ -2,8 +2,8 @@ using UnityEngine;
 using System.Collections.Generic;
  
 /// <summary>
-/// Clean traffic system - spawns X vehicles from a pool of 35, moves them backward, recycles when behind player
-/// Spawns 1-2 cars at a time with spacing control
+/// Traffic system with object pooling - spawns vehicles, moves them backward, recycles when behind player
+/// Cars are reused instead of destroyed/instantiated for better performance
 /// </summary>
 public class TrafficSpawner : MonoBehaviour
 {
@@ -15,7 +15,7 @@ public class TrafficSpawner : MonoBehaviour
     [SerializeField] private float spawnInterval = 2f; // Time between spawns (seconds)
     [SerializeField] private float minSpacing = 30f; // Minimum distance between cars
     
-    [Header("Lane Positions")]
+    [Header("Lane Positions (MUST MATCH TruckPlayerController!)")]
     [SerializeField] private float[] laneXPositions = new float[] { -4.66f, 0f, 4.66f }; // Left, Center, Right
     
     [Header("Movement")]
@@ -26,7 +26,8 @@ public class TrafficSpawner : MonoBehaviour
     [Header("References")]
     [SerializeField] private Transform playerTruck; // Your truck
     
-    // Active vehicles
+    // Object pool for reusing vehicles
+    private List<GameObject> vehiclePool = new List<GameObject>();
     private List<GameObject> activeVehicles = new List<GameObject>();
     private float spawnTimer = 0f;
     
@@ -35,7 +36,16 @@ public class TrafficSpawner : MonoBehaviour
         // Find player if not assigned
         if (playerTruck == null)
         {
-            playerTruck = GameObject.FindGameObjectWithTag("Player").transform;
+            GameObject player = GameObject.FindGameObjectWithTag("Player");
+            if (player != null)
+            {
+                playerTruck = player.transform;
+            }
+            else
+            {
+                Debug.LogError("TrafficSpawner: No player found! Tag your truck with 'Player'");
+                return;
+            }
         }
         
         // Validate
@@ -45,7 +55,33 @@ public class TrafficSpawner : MonoBehaviour
             return;
         }
         
+        // Create initial pool
+        InitializePool();
+        
         Debug.Log($"TrafficSpawner ready with {vehiclePrefabs.Length} vehicle types. Max active: {maxActiveVehicles}");
+    }
+    
+    void InitializePool()
+    {
+        // Pre-instantiate some vehicles for the pool
+        int poolSize = Mathf.Min(maxActiveVehicles + 5, 20); // Create a reasonable pool
+        
+        for (int i = 0; i < poolSize; i++)
+        {
+            // Pick random prefab
+            GameObject prefab = vehiclePrefabs[Random.Range(0, vehiclePrefabs.Length)];
+            GameObject vehicle = Instantiate(prefab, Vector3.zero, Quaternion.Euler(0, 180, 0));
+            vehicle.name = $"{prefab.name}_Pooled";
+            vehicle.transform.SetParent(transform);
+            vehicle.SetActive(false); // Start inactive
+            
+            // Make sure it has "Vehicle" tag
+            vehicle.tag = "Vehicle";
+            
+            vehiclePool.Add(vehicle);
+        }
+        
+        Debug.Log($"Created pool of {poolSize} vehicles");
     }
     
     void Update()
@@ -63,7 +99,7 @@ public class TrafficSpawner : MonoBehaviour
             spawnTimer = 0f;
         }
         
-        // Move all vehicles and check for despawn
+        // Move all vehicles and check for recycling
         UpdateVehicles();
     }
     
@@ -86,8 +122,19 @@ public class TrafficSpawner : MonoBehaviour
     
     void SpawnVehicle(int waveIndex)
     {
-        // Pick random vehicle from pool
-        GameObject prefab = vehiclePrefabs[Random.Range(0, vehiclePrefabs.Length)];
+        // Get vehicle from pool or create new one
+        GameObject vehicle = GetPooledVehicle();
+        
+        if (vehicle == null)
+        {
+            Debug.LogWarning("No available vehicles in pool! Creating new one...");
+            GameObject prefab = vehiclePrefabs[Random.Range(0, vehiclePrefabs.Length)];
+            vehicle = Instantiate(prefab, Vector3.zero, Quaternion.Euler(0, 180, 0));
+            vehicle.name = $"{prefab.name}_Extra";
+            vehicle.transform.SetParent(transform);
+            vehicle.tag = "Vehicle";
+            vehiclePool.Add(vehicle);
+        }
         
         // Pick random lane
         float laneX = laneXPositions[Random.Range(0, laneXPositions.Length)];
@@ -99,25 +146,37 @@ public class TrafficSpawner : MonoBehaviour
         // Check if too close to another vehicle in same lane
         if (IsTooClose(laneX, spawnZ))
         {
-            // Skip this spawn, will try again next interval
+            // Put vehicle back in pool
+            vehicle.SetActive(false);
             return;
         }
         
-        // Spawn position
-        Vector3 spawnPos = new Vector3(laneX, 0f, spawnZ);
-        
-        // Spawn vehicle (facing toward player)
-        GameObject vehicle = Instantiate(prefab, spawnPos, Quaternion.Euler(0, 180, 0));
-        vehicle.name = $"{prefab.name}_Active";
-        vehicle.transform.SetParent(transform); // Organize under this manager
-        
-        // Tag it for collision detection
-        vehicle.tag = "Traffic";
+        // Position vehicle
+        vehicle.transform.position = new Vector3(laneX, 0f, spawnZ);
+        vehicle.transform.rotation = Quaternion.Euler(0, 180, 0); // Face toward player
+        vehicle.SetActive(true);
         
         // Add to active list
-        activeVehicles.Add(vehicle);
+        if (!activeVehicles.Contains(vehicle))
+        {
+            activeVehicles.Add(vehicle);
+        }
         
-        Debug.Log($"Spawned {prefab.name} in lane X={laneX:F2} at Z={spawnZ:F0}");
+        Debug.Log($"Spawned {vehicle.name} in lane X={laneX:F2} at Z={spawnZ:F0}");
+    }
+    
+    GameObject GetPooledVehicle()
+    {
+        // Find an inactive vehicle in the pool
+        foreach (GameObject vehicle in vehiclePool)
+        {
+            if (vehicle != null && !vehicle.activeInHierarchy)
+            {
+                return vehicle;
+            }
+        }
+        
+        return null; // No available vehicles
     }
     
     bool IsTooClose(float laneX, float spawnZ)
@@ -125,7 +184,7 @@ public class TrafficSpawner : MonoBehaviour
         // Check if another vehicle is too close in the same lane
         foreach (GameObject vehicle in activeVehicles)
         {
-            if (vehicle == null)
+            if (vehicle == null || !vehicle.activeInHierarchy)
                 continue;
             
             // Check same lane
@@ -145,29 +204,29 @@ public class TrafficSpawner : MonoBehaviour
     
     void UpdateVehicles()
     {
-        // Move vehicles and check for despawn
+        // Move vehicles and check for recycling
         for (int i = activeVehicles.Count - 1; i >= 0; i--)
         {
             GameObject vehicle = activeVehicles[i];
             
-            // Skip if destroyed (collision)
-            if (vehicle == null)
+            // Skip if destroyed (collision) or inactive
+            if (vehicle == null || !vehicle.activeInHierarchy)
             {
                 activeVehicles.RemoveAt(i);
                 continue;
             }
             
-            // Move vehicle backward (in world space)
-            // Negative Z = toward player, past player
+            // Move vehicle backward (toward and past player)
+            // Using Space.Self with rotation 180 means forward = toward player
             vehicle.transform.Translate(Vector3.forward * vehicleSpeed * Time.deltaTime, Space.Self);
             
             // Check if behind despawn line
             if (vehicle.transform.position.z < playerTruck.position.z + despawnDistance)
             {
-                // Despawn
-                Destroy(vehicle);
+                // Recycle vehicle (don't destroy, just deactivate)
+                vehicle.SetActive(false);
                 activeVehicles.RemoveAt(i);
-                Debug.Log($"Despawned vehicle (passed player). Active: {activeVehicles.Count}");
+                Debug.Log($"Recycled vehicle (passed player). Active: {activeVehicles.Count}");
             }
         }
     }
@@ -199,9 +258,18 @@ public class TrafficSpawner : MonoBehaviour
         foreach (GameObject vehicle in activeVehicles)
         {
             if (vehicle != null)
-                Destroy(vehicle);
+                vehicle.SetActive(false);
         }
         activeVehicles.Clear();
+    }
+    
+    // Remove a vehicle from active list (called when crashed into)
+    public void RemoveVehicle(GameObject vehicle)
+    {
+        if (activeVehicles.Contains(vehicle))
+        {
+            activeVehicles.Remove(vehicle);
+        }
     }
     
     void OnDrawGizmos()

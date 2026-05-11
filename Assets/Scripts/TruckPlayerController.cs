@@ -2,42 +2,46 @@ using UnityEngine;
 
 /// <summary>
 /// Truck player controller - Change lanes, eat hotdogs, drink Big Gulps, road beers, and honk
-/// Because that's what trucking is all about
+/// Now with smooth 2-3 second lane transitions and proper input blocking
 /// </summary>
 public class TruckPlayerController : MonoBehaviour
 {
     [Header("Lane Changing")]
-    private float laneWidth = 3.5f;
-    private float laneChangeSpeed = 5f;
+    [SerializeField] private float[] laneXPositions = new float[] { -4.66f, 0f, 4.66f }; // Must match TrafficSpawner!
+    [SerializeField] private float laneChangeDuration = 2.5f; // 2-3 seconds
     private int currentLane = 1; // 0 = left, 1 = center, 2 = right
-    private int totalLanes = 3;
+    private int targetLane = 1;
+    private float laneChangeProgress = 1f; // 1 = finished, 0 = just started
+    private Vector3 laneChangeStartPos;
+    private Vector3 laneChangeTargetPos;
     
     [Header("Movement")]
-    private float forwardSpeed = 20f;
-    private bool autoForward = true;
+    [SerializeField] private float forwardSpeed = 0f; // Set to 0 - we're stationary, world moves
+    [SerializeField] private bool autoForward = false; // Truck stays still, traffic moves backward
     
     [Header("Trucker Activities")]
-    private int hotdogsRemaining = 10;
-    private int bigGulpsRemaining = 5;
-    private int roadBeersRemaining = 6;
-    private float eatDuration = 2f;
-    private float drinkDuration = 1.5f;
+    [SerializeField] private int hotdogsRemaining = 10;
+    [SerializeField] private int bigGulpsRemaining = 5;
+    [SerializeField] private int roadBeersRemaining = 6;
+    [SerializeField] private float eatDuration = 2f;
+    [SerializeField] private float drinkDuration = 1.5f;
     
     [Header("Audio")]
+    [SerializeField] private AudioClip hornSound;
+    [SerializeField] private AudioClip eatSound;
+    [SerializeField] private AudioClip drinkSound;
+    [SerializeField] private AudioClip burpSound;
+    
     private AudioSource hornAudioSource;
-    private AudioClip hornSound;
-    private AudioClip eatSound;
-    private AudioClip drinkSound;
-    private AudioClip burpSound;
     
     // UI Reference (found at runtime)
     private TruckerUI truckerUI;
     
     // Internal state
-    private float targetLanePosition;
     private bool isEating = false;
     private bool isDrinking = false;
     private float activityTimer = 0f;
+    private bool isChangingLanes = false;
     
     // Stats
     private int hotdogsEaten = 0;
@@ -48,7 +52,7 @@ public class TruckPlayerController : MonoBehaviour
     void Start()
     {
         // Initialize lane position
-        targetLanePosition = GetLanePosition(currentLane);
+        transform.position = new Vector3(laneXPositions[currentLane], transform.position.y, transform.position.z);
         
         // Setup audio if not assigned
         if (hornAudioSource == null)
@@ -65,7 +69,7 @@ public class TruckPlayerController : MonoBehaviour
         // Update UI
         UpdateUI();
         
-        Debug.Log("Truck driver ready! Controls: A/D = Change Lanes, H = Hotdog, G = Big Gulp, B = Road Beer, Space = Horn");
+        Debug.Log("Truck driver ready! Controls: A/D or Arrow Keys = Change Lanes, H = Hotdog, G = Big Gulp, B = Road Beer, Space = Horn");
     }
  
     void Update()
@@ -78,16 +82,16 @@ public class TruckPlayerController : MonoBehaviour
  
     void HandleInput()
     {
-        // Can't do anything while eating or drinking
-        if (isEating || isDrinking)
+        // Can't do anything while eating, drinking, or changing lanes
+        if (isEating || isDrinking || isChangingLanes)
             return;
         
-        // Lane changing
-        if (Input.GetKeyDown(KeyCode.A))
+        // Lane changing - A/D or Arrow Keys
+        if (Input.GetKeyDown(KeyCode.A) || Input.GetKeyDown(KeyCode.LeftArrow))
         {
             ChangeLane(-1); // Left
         }
-        else if (Input.GetKeyDown(KeyCode.D))
+        else if (Input.GetKeyDown(KeyCode.D) || Input.GetKeyDown(KeyCode.RightArrow))
         {
             ChangeLane(1); // Right
         }
@@ -106,7 +110,7 @@ public class TruckPlayerController : MonoBehaviour
             DrinkRoadBeer();
         }
         
-        // Horn (can honk while eating/drinking because one hand is free)
+        // Horn (can honk anytime - one hand is always free)
         if (Input.GetKeyDown(KeyCode.Space))
         {
             HonkHorn();
@@ -115,36 +119,50 @@ public class TruckPlayerController : MonoBehaviour
  
     void ChangeLane(int direction)
     {
-        int newLane = currentLane + direction;
+        int newLane = targetLane + direction;
         
         // Check bounds
-        if (newLane < 0 || newLane >= totalLanes)
+        if (newLane < 0 || newLane >= laneXPositions.Length)
         {
             Debug.Log("Can't change lanes - already at edge!");
             return;
         }
         
-        currentLane = newLane;
-        targetLanePosition = GetLanePosition(currentLane);
+        // Start lane change
+        targetLane = newLane;
+        isChangingLanes = true;
+        laneChangeProgress = 0f;
+        
+        laneChangeStartPos = transform.position;
+        laneChangeTargetPos = new Vector3(laneXPositions[targetLane], transform.position.y, transform.position.z);
         
         string[] laneNames = new string[] { "left", "center", "right" };
-        Debug.Log($"Changing to {laneNames[currentLane]} lane");
-    }
- 
-    float GetLanePosition(int lane)
-    {
-        // Calculate lateral position based on lane
-        // Assuming center lane is at x=0
-        float centerOffset = (totalLanes - 1) * laneWidth / 2f;
-        return (lane * laneWidth) - centerOffset;
+        Debug.Log($"Changing to {laneNames[targetLane]} lane...");
     }
  
     void HandleLaneMovement()
     {
-        // Smoothly move to target lane position
-        Vector3 currentPos = transform.position;
-        float newX = Mathf.Lerp(currentPos.x, targetLanePosition, Time.deltaTime * laneChangeSpeed);
-        transform.position = new Vector3(newX, currentPos.y, currentPos.z);
+        if (!isChangingLanes)
+            return;
+        
+        // Increment progress (0 to 1 over laneChangeDuration)
+        laneChangeProgress += Time.deltaTime / laneChangeDuration;
+        
+        if (laneChangeProgress >= 1f)
+        {
+            // Lane change complete
+            laneChangeProgress = 1f;
+            isChangingLanes = false;
+            currentLane = targetLane;
+            Debug.Log("Lane change complete!");
+        }
+        
+        // Smooth interpolation (ease in/out)
+        float t = Mathf.SmoothStep(0f, 1f, laneChangeProgress);
+        
+        // Update position (only X changes, keep Y and Z)
+        Vector3 newPos = Vector3.Lerp(laneChangeStartPos, laneChangeTargetPos, t);
+        transform.position = new Vector3(newPos.x, transform.position.y, transform.position.z);
     }
  
     void HandleForwardMovement()
@@ -152,7 +170,7 @@ public class TruckPlayerController : MonoBehaviour
         if (!autoForward)
             return;
         
-        // Move forward automatically
+        // Move forward automatically (if enabled)
         transform.Translate(Vector3.forward * forwardSpeed * Time.deltaTime);
     }
  
@@ -285,17 +303,19 @@ public class TruckPlayerController : MonoBehaviour
         float wobbleAmount = 0.3f;
         float elapsed = 0f;
         
-        Vector3 originalLanePos = transform.position;
-        
         while (elapsed < wobbleDuration)
         {
             elapsed += Time.deltaTime;
             
-            // Add slight sine wave wobble to X position
-            float wobble = Mathf.Sin(elapsed * 3f) * wobbleAmount;
-            Vector3 pos = transform.position;
-            pos.x = targetLanePosition + wobble;
-            transform.position = pos;
+            // Only wobble if not actively changing lanes
+            if (!isChangingLanes)
+            {
+                // Add slight sine wave wobble to X position
+                float wobble = Mathf.Sin(elapsed * 3f) * wobbleAmount;
+                Vector3 pos = transform.position;
+                pos.x = laneXPositions[currentLane] + wobble;
+                transform.position = pos;
+            }
             
             yield return null;
         }
@@ -322,6 +342,7 @@ public class TruckPlayerController : MonoBehaviour
     public int GetCurrentLane() => currentLane;
     public bool IsEating() => isEating;
     public bool IsDrinking() => isDrinking;
+    public bool IsChangingLanes() => isChangingLanes;
     public int GetHotdogsRemaining() => hotdogsRemaining;
     public int GetBigGulpsRemaining() => bigGulpsRemaining;
     public int GetRoadBeersRemaining() => roadBeersRemaining;
@@ -345,19 +366,30 @@ public class TruckPlayerController : MonoBehaviour
         
         Gizmos.color = Color.yellow;
         
-        for (int i = 0; i < totalLanes; i++)
+        for (int i = 0; i < laneXPositions.Length; i++)
         {
-            float lanePos = GetLanePosition(i);
+            float lanePos = laneXPositions[i];
             Vector3 start = new Vector3(lanePos, transform.position.y, transform.position.z - 50f);
             Vector3 end = new Vector3(lanePos, transform.position.y, transform.position.z + 50f);
             
             Gizmos.DrawLine(start, end);
         }
         
-        // Highlight current lane
-        Gizmos.color = Color.green;
-        Vector3 currentLaneStart = new Vector3(targetLanePosition, transform.position.y, transform.position.z - 10f);
-        Vector3 currentLaneEnd = new Vector3(targetLanePosition, transform.position.y, transform.position.z + 10f);
-        Gizmos.DrawLine(currentLaneStart, currentLaneEnd);
+        // Highlight current/target lane
+        if (isChangingLanes)
+        {
+            // Show both current and target
+            Gizmos.color = Color.red;
+            Vector3 targetLaneStart = new Vector3(laneXPositions[targetLane], transform.position.y, transform.position.z - 10f);
+            Vector3 targetLaneEnd = new Vector3(laneXPositions[targetLane], transform.position.y, transform.position.z + 10f);
+            Gizmos.DrawLine(targetLaneStart, targetLaneEnd);
+        }
+        else
+        {
+            Gizmos.color = Color.green;
+            Vector3 currentLaneStart = new Vector3(laneXPositions[currentLane], transform.position.y, transform.position.z - 10f);
+            Vector3 currentLaneEnd = new Vector3(laneXPositions[currentLane], transform.position.y, transform.position.z + 10f);
+            Gizmos.DrawLine(currentLaneStart, currentLaneEnd);
+        }
     }
 }

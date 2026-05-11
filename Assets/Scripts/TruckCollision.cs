@@ -2,7 +2,8 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
  
 /// <summary>
-/// Simple collision detection - hit a car = game over
+/// Collision detection - hit a vehicle = game over
+/// Works with "Vehicle" tag
 /// </summary>
 public class TruckCollision : MonoBehaviour
 {
@@ -20,6 +21,7 @@ public class TruckCollision : MonoBehaviour
     private AudioSource audioSource;
     private bool hasCrashed = false;
     private int crashCount = 0;
+    private TrafficSpawner trafficSpawner;
  
     void Start()
     {
@@ -33,29 +35,29 @@ public class TruckCollision : MonoBehaviour
         {
             gameOverPanel.SetActive(false);
         }
+        
+        // Find traffic spawner (to remove crashed vehicles from active list)
+        trafficSpawner = FindObjectOfType<TrafficSpawner>();
     }
  
     void OnCollisionEnter(Collision collision)
     {
-        // Check if we hit another vehicle
-        if (collision.gameObject.CompareTag("Traffic") || 
-            collision.gameObject.CompareTag("Vehicle") ||
-            collision.gameObject.name.Contains("Car") ||
-            collision.gameObject.name.Contains("Truck"))
+        // Check if we hit a vehicle (using your "Vehicle" tag)
+        if (collision.gameObject.CompareTag("Vehicle"))
         {
             if (!hasCrashed)
             {
-                Crash();
+                Crash(collision.gameObject);
             }
         }
     }
  
-    void Crash()
+    void Crash(GameObject hitVehicle)
     {
         hasCrashed = true;
         crashCount++;
         
-        Debug.Log($"CRASH! You hit a car! Total crashes: {crashCount}");
+        Debug.Log($"CRASH! You hit {hitVehicle.name}! Total crashes: {crashCount}");
         
         // Play crash sound
         if (crashSound != null && audioSource != null)
@@ -63,17 +65,34 @@ public class TruckCollision : MonoBehaviour
             audioSource.PlayOneShot(crashSound);
         }
         
-        // Spawn explosion effect
+        // Spawn explosion effect at collision point
         if (explosionEffect != null)
         {
-            Instantiate(explosionEffect, transform.position, Quaternion.identity);
+            Vector3 explosionPos = (transform.position + hitVehicle.transform.position) / 2f;
+            Instantiate(explosionEffect, explosionPos, Quaternion.identity);
         }
+        
+        // Remove the hit vehicle from traffic system
+        if (trafficSpawner != null)
+        {
+            trafficSpawner.RemoveVehicle(hitVehicle);
+        }
+        
+        // Destroy the vehicle we hit
+        Destroy(hitVehicle);
         
         // Disable player control
         TruckPlayerController playerController = GetComponent<TruckPlayerController>();
         if (playerController != null)
         {
             playerController.enabled = false;
+        }
+        
+        // Stop score tracking
+        ScoreTracker scoreTracker = GetComponent<ScoreTracker>();
+        if (scoreTracker != null)
+        {
+            scoreTracker.StopTracking();
         }
         
         if (enableGameOver)
@@ -102,8 +121,8 @@ public class TruckCollision : MonoBehaviour
  
     void Respawn()
     {
-        // Reset truck position
-        transform.position = new Vector3(0, 2, 0);
+        // Reset truck position to center lane
+        transform.position = new Vector3(0f, transform.position.y, transform.position.z);
         transform.rotation = Quaternion.identity;
         
         // Re-enable player control
