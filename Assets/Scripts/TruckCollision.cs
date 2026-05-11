@@ -37,7 +37,7 @@ public class TruckCollision : MonoBehaviour
         }
         
         // Find traffic spawner (to remove crashed vehicles from active list)
-        trafficSpawner = FindObjectOfType<TrafficSpawner>();
+        trafficSpawner = FindFirstObjectByType<TrafficSpawner>();
     }
  
     void OnCollisionEnter(Collision collision)
