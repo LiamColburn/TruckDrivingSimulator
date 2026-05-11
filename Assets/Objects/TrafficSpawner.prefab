@@ -1,0 +1,91 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &8803002382892746988
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1777355658382849304}
+  - component: {fileID: 6887232587390059706}
+  m_Layer: 0
+  m_Name: TrafficSpawner
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1777355658382849304
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8803002382892746988}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 3.40279, y: 1.53125, z: 16.52924}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &6887232587390059706
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8803002382892746988}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9c9f3c06ca3e2ef42ae8b24bef542ef9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::TrafficSpawner
+  vehiclePrefabs:
+  - {fileID: 2239004604352711341, guid: a8e23495feb658445b522e13cc27c6c9, type: 3}
+  - {fileID: 7811458833753578946, guid: f9081acc17bf1794b8e72e1fc8b16974, type: 3}
+  - {fileID: 7092216917051357572, guid: d932b85dcab52fe4b9a16af95cf59ca4, type: 3}
+  - {fileID: 6496295641431184051, guid: 38b8f729e1d32e842911a01e4170add9, type: 3}
+  - {fileID: 2353216988520459889, guid: 7f70de0f0dacfb4449aacbfe519fe13a, type: 3}
+  - {fileID: 362961357013838199, guid: e8593d644c413b240bf4ed0250e54db9, type: 3}
+  - {fileID: 6109318608169789655, guid: 769131eeb0a0eaa43a5e18f4fcab94c9, type: 3}
+  - {fileID: 3214725725177497458, guid: c9ee3d3864db61e4e9ab24f74691e64f, type: 3}
+  - {fileID: 571866882329476893, guid: f111940d747b4974292dbf3e2fca6437, type: 3}
+  - {fileID: 2450597267622867401, guid: 90bdf27c000c09d42ac4160ba6c89a2f, type: 3}
+  - {fileID: 7199035978851664596, guid: 9e70719dc991f1a4695eb53416884d30, type: 3}
+  - {fileID: 6417776283978846369, guid: 87d67ad903f5b134c929bce26a382a1f, type: 3}
+  - {fileID: 4088899255891280273, guid: 1e9ccade06057cb45a6fe567215f2d24, type: 3}
+  - {fileID: 4433158411723781788, guid: 2508427f300350648812c876da3cadac, type: 3}
+  - {fileID: 401257221555419627, guid: 48a3318779e103c47b061825d2fa5f32, type: 3}
+  - {fileID: 5759660886933430516, guid: 4f029d3b488043a4087bc922f4e47a82, type: 3}
+  - {fileID: 7421721474107632366, guid: d5c7d240e7bbaf7459891bb1ee079cac, type: 3}
+  - {fileID: 718325548510610621, guid: 6ac32fee0c65865499104a78519c77f7, type: 3}
+  - {fileID: 8772112223268909922, guid: 9c1a353ddda1cfd40bd2da29cba9190f, type: 3}
+  - {fileID: 4504638446136642790, guid: 2c63cfcf3ee95e044b1a3e7fdd492ef5, type: 3}
+  - {fileID: 3531861807740598398, guid: 95e456fe53cb79948a94826a265a93a8, type: 3}
+  - {fileID: 4059841183123420984, guid: 1224b3d19493d83498ab1380ed1dee41, type: 3}
+  - {fileID: 6703154707229129380, guid: f48ee8ef286ce8a40801191ca1699deb, type: 3}
+  - {fileID: 2043225893068592893, guid: d9b4e73dcb4292d4cbe9f1915ca41426, type: 3}
+  - {fileID: 8521156326149632476, guid: b21bfe96f6c7001429bacef99b3a9dd7, type: 3}
+  - {fileID: 331450365421559624, guid: 1efe5ac92cf72df44a11138fd18b37b7, type: 3}
+  - {fileID: 8348588541610434083, guid: 4cbc373f5d1dd5348b4e74c50b5acbdf, type: 3}
+  - {fileID: 302285514544462590, guid: 740fd9b4dcd915d4caeeddaf749b782d, type: 3}
+  - {fileID: 6622931906172247876, guid: 3511ac56d4cab6644ab299e2038e7f29, type: 3}
+  - {fileID: 4421654560904861888, guid: 303b4da82c6b5844fae0d48d2e6193c0, type: 3}
+  - {fileID: 4584705528702643572, guid: 52e0223170739954596718517355281b, type: 3}
+  - {fileID: 2699326882916732652, guid: bbea5d197a2b56a44a0718a54aeedd54, type: 3}
+  - {fileID: 4999707031387170110, guid: b479bed2bb02fc34d834dea15de964a3, type: 3}
+  maxActiveVehicles: 10
+  spawnInterval: 2
+  minSpacing: 30
+  laneXPositions:
+  - -4.66
+  - 0
+  - 4.66
+  vehicleSpeed: 20
+  spawnDistance: 150
+  despawnDistance: -50
+  playerTruck: {fileID: 0}
