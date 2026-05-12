@@ -34,7 +34,7 @@ public class TruckPlayerController : MonoBehaviour
 
     [Header("UI & Effects")]
     [SerializeField] private TruckerUI truckerUI;
-    [SerializeField] private CameraController cameraController;
+    [SerializeField] private CameraFollow cameraFollow;
     [SerializeField] private ActivityParticles activityParticles;
 
     private AudioSource hornAudioSource;
@@ -62,9 +62,9 @@ public class TruckPlayerController : MonoBehaviour
             hornAudioSource = gameObject.AddComponent<AudioSource>();
         }
 
-        if (truckerUI        == null) truckerUI        = FindFirstObjectByType<TruckerUI>();
-        if (cameraController == null) cameraController = FindFirstObjectByType<CameraController>();
-        if (activityParticles == null) activityParticles = GetComponentInChildren<ActivityParticles>();
+        if (truckerUI         == null) truckerUI         = FindFirstObjectByType<TruckerUI>();
+        if (cameraFollow      == null) cameraFollow      = FindFirstObjectByType<CameraFollow>();
+        if (activityParticles == null) activityParticles = GetComponent<ActivityParticles>();
 
         Debug.Log("Truck driver ready! Controls: A/D or Arrow Keys = Change Lanes, H = Hotdog, G = Big Gulp, B = Road Beer, Space = Horn");
     }
@@ -133,7 +133,7 @@ public class TruckPlayerController : MonoBehaviour
         laneChangeStartPos = transform.position;
         laneChangeTargetPos = new Vector3(laneXPositions[targetLane], transform.position.y, transform.position.z);
 
-        cameraController?.TriggerLaneTilt(direction);
+        cameraFollow?.TriggerLaneTilt(direction);
 
         string[] laneNames = new string[] { "left", "center", "right" };
         Debug.Log($"Changing to {laneNames[targetLane]} lane...");
@@ -251,7 +251,7 @@ public class TruckPlayerController : MonoBehaviour
         PlaySound(drinkSound);
         truckerUI?.ShowRoadBeer(drinkDuration);
         activityParticles?.SpawnDrinkBurst();
-        cameraController?.TriggerRoadBeerEffect();
+        cameraFollow?.TriggerRoadBeerEffect();
         AudioManager.Instance?.PlayDrink();
 
         // Road beers make you drive slightly wonky (optional effect)
