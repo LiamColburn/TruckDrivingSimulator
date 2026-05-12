@@ -200,16 +200,16 @@ public class ScoreTracker : MonoBehaviour
         panelRT.anchorMax = new Vector2(1f, 1f);
         panelRT.pivot     = new Vector2(1f, 1f);
         panelRT.anchoredPosition = new Vector2(-20f, -20f); // 20px padding from corner
-        panelRT.sizeDelta = new Vector2(320f, 200f);
+        panelRT.sizeDelta = new Vector2(220f, 310f);
 
         // Semi-transparent background
         UnityEngine.UI.Image panelBg = scorePanel.AddComponent<UnityEngine.UI.Image>();
         panelBg.color = new Color(0f, 0f, 0f, 0.6f);
 
-        // Create three stat displays in a vertical layout
-        CreateStatText(scorePanel.transform, "ScoreText", new Vector2(0f, 50f), out scoreText);
-        CreateStatText(scorePanel.transform, "DistanceText", new Vector2(0f, 0f), out distanceText);
-        CreateStatText(scorePanel.transform, "TimeText", new Vector2(0f, -50f), out timeText);
+        // Create three stat displays spaced further apart so label + number dont overlap
+        CreateStatText(scorePanel.transform, "ScoreText",    new Vector2(0f,  95f), out scoreText);
+        CreateStatText(scorePanel.transform, "DistanceText", new Vector2(0f,   0f), out distanceText);
+        CreateStatText(scorePanel.transform, "TimeText",     new Vector2(0f, -95f), out timeText);
 
         Debug.Log("ScoreTracker: Auto-created score UI in top-right corner");
     }
@@ -224,7 +224,7 @@ public class ScoreTracker : MonoBehaviour
         rt.anchorMax = new Vector2(0.5f, 0.5f);
         rt.pivot     = new Vector2(0.5f, 0.5f);
         rt.anchoredPosition = yOffset;
-        rt.sizeDelta = new Vector2(280f, 60f);
+        rt.sizeDelta = new Vector2(200f, 80f);
 
         textComponent = textGO.AddComponent<TextMeshProUGUI>();
         textComponent.fontSize  = 24f;

@@ -119,6 +119,32 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
+--- !u!1 &92557158 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 3176640589281121225, guid: 962e5a5b36e297d49be5ae6bccdbdc3d, type: 3}
+  m_PrefabInstance: {fileID: 1921177653}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &92557161
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 92557158}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f1f0c56f1704849bc9035ff7a878b40a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::TruckerVideoOverlay
+  hotdogVideo: {fileID: 32900000, guid: 8f42f9094df2f7443b5e4c90c0f4f7c4, type: 3}
+  beerVideo: {fileID: 0}
+  bigGulpVideo: {fileID: 0}
+  smokingVideo: {fileID: 0}
+  overlayCanvas: {fileID: 0}
+  videoDisplay: {fileID: 0}
+  videoPlayer: {fileID: 0}
+  pauseGameDuringVideo: 0
+  videoAlpha: 1
 --- !u!1 &330585543
 GameObject:
   m_ObjectHideFlags: 0
@@ -272,13 +298,14 @@ MonoBehaviour:
   target: {fileID: 0}
   offset: {x: 0, y: 5, z: -10}
   positionSmoothSpeed: 5
-  rotationSmoothSpeed: 5
-  useLookAhead: 1
-  lookAheadDistance: 5
-  lookAheadSmoothSpeed: 3
-  tiltOnTurn: 0
-  maxTiltAngle: 5
+  bobSpeed: 1.2
+  bobY: 0.03
+  bobX: 0.01
+  tiltAngle: 2.5
   tiltSpeed: 3
+  fovPulseAmount: 5
+  fovPulseSpeed: 0.65
+  fovEffectDuration: 5
 --- !u!1 &410087039
 GameObject:
   m_ObjectHideFlags: 0
@@ -455,6 +482,249 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1000000001
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2073721153}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d1d6efcfcab0cab46b81f2ede2150e75, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::TruckCollision
+  enableGameOver: 1
+  respawnDelay: 2
+  explosionEffect: {fileID: 0}
+  crashSound: {fileID: 0}
+  gameOverPanel: {fileID: 0}
+--- !u!114 &1000000002
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2073721153}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: da0caf46021c7484e85387607dd21c97, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ScoreTracker
+  pointsPerSecond: 10
+  distancePerSecond: 20
+  distanceMultiplier: 1
+  scoreText: {fileID: 0}
+  distanceText: {fileID: 0}
+  timeText: {fileID: 0}
+  scorePanel: {fileID: 0}
+--- !u!114 &1000000003
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2073721153}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 47c018eeb9dab4230ad269310ae58080, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ActivityParticles
+  eatCount: 18
+  drinkCount: 14
+  honkCount: 10
+--- !u!1 &1000000010
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1000000011}
+  - component: {fileID: 1000000012}
+  - component: {fileID: 1000000014}
+  - component: {fileID: 1000000013}
+  m_Layer: 0
+  m_Name: UI_Manager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1000000011
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1000000010}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1000000012
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1000000010}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0b6071f897ff84c24951b7a7fc81e520, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::TruckerUI
+  activityPanel: {fileID: 0}
+  activityText: {fileID: 0}
+  flashOverlay: {fileID: 0}
+  vignetteOverlay: {fileID: 0}
+  hotdogSprite: {fileID: 0}
+  bigGulpSprite: {fileID: 0}
+  roadBeerSprite: {fileID: 0}
+  honkSprite: {fileID: 0}
+--- !u!114 &1000000013
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1000000010}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f4222993b5cb74bd6a2e209a90b11c33, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ControlsUI
+  toggleKey: 9
+  showOnStart: 1
+  autoHideDelay: 5
+  controlsPanel: {fileID: 0}
+--- !u!114 &1000000014
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1000000010}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dc41650cd8bf14804ae20a55f34dff57, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::TruckerInventoryUI
+  playerController: {fileID: 0}
+  inventoryPanel: {fileID: 0}
+  hotdogText: {fileID: 0}
+  bigGulpText: {fileID: 0}
+  roadBeerText: {fileID: 0}
+  hotdogIcon: {fileID: 0}
+  bigGulpIcon: {fileID: 0}
+  roadBeerIcon: {fileID: 0}
+--- !u!1 &1000000020
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1000000021}
+  - component: {fileID: 1000000022}
+  m_Layer: 0
+  m_Name: AudioManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1000000021
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1000000020}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1000000022
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1000000020}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 30cfaa921bdc9443e93dffeeeabc0471, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::AudioManager
+  hornClip: {fileID: 0}
+  eatClip: {fileID: 0}
+  drinkClip: {fileID: 0}
+  burpClip: {fileID: 0}
+  crashClip: {fileID: 0}
+  sfxVolume: 1
+  hornVolume: 0.85
+--- !u!1 &1000000030
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1000000031}
+  - component: {fileID: 1000000032}
+  m_Layer: 0
+  m_Name: RoadManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1000000031
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1000000030}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1000000032
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1000000030}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dcf8b481debfd3740b4fee1ab91751d6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::InfiniteRoadManager
+  roadChunkPrefab: {fileID: 0}
+  chunkLength: 100
+  chunkWidth: 15
+  chunksAhead: 3
+  chunksBehind: 1
+  roadSpeed: 20
+  playerTruck: {fileID: 0}
 --- !u!1001 &1286722912
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -520,6 +790,66 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: a3c5f4875687a6f409739eead1cb6e00, type: 3}
+--- !u!1001 &1921177653
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 3176640589281121225, guid: 962e5a5b36e297d49be5ae6bccdbdc3d, type: 3}
+      propertyPath: m_Name
+      value: VideoOverlayManager
+      objectReference: {fileID: 0}
+    - target: {fileID: 5188507453681993514, guid: 962e5a5b36e297d49be5ae6bccdbdc3d, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 2.41092
+      objectReference: {fileID: 0}
+    - target: {fileID: 5188507453681993514, guid: 962e5a5b36e297d49be5ae6bccdbdc3d, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5188507453681993514, guid: 962e5a5b36e297d49be5ae6bccdbdc3d, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 2.41092
+      objectReference: {fileID: 0}
+    - target: {fileID: 5188507453681993514, guid: 962e5a5b36e297d49be5ae6bccdbdc3d, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5188507453681993514, guid: 962e5a5b36e297d49be5ae6bccdbdc3d, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5188507453681993514, guid: 962e5a5b36e297d49be5ae6bccdbdc3d, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5188507453681993514, guid: 962e5a5b36e297d49be5ae6bccdbdc3d, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5188507453681993514, guid: 962e5a5b36e297d49be5ae6bccdbdc3d, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5188507453681993514, guid: 962e5a5b36e297d49be5ae6bccdbdc3d, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5188507453681993514, guid: 962e5a5b36e297d49be5ae6bccdbdc3d, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 3176640589281121225, guid: 962e5a5b36e297d49be5ae6bccdbdc3d, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 92557161}
+  m_SourcePrefab: {fileID: 100100000, guid: 962e5a5b36e297d49be5ae6bccdbdc3d, type: 3}
 --- !u!1 &2073721153 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 3620546173800811610, guid: 0c097825d5389384fa2e1fa0c315d871, type: 3}
@@ -574,69 +904,11 @@ MonoBehaviour:
   - 0
   - 4.66
   laneChangeDuration: 2.5
-  forwardSpeed: 0
-  autoForward: 0
   hotdogsRemaining: 10
   bigGulpsRemaining: 5
   roadBeersRemaining: 6
-  eatDuration: 2
-  drinkDuration: 1.5
-  hornSound: {fileID: 0}
-  eatSound: {fileID: 0}
-  drinkSound: {fileID: 0}
-  burpSound: {fileID: 0}
-  truckerUI: {fileID: 0}
-  cameraController: {fileID: 0}
-  activityParticles: {fileID: 0}
---- !u!114 &1000000001
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2073721153}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d1d6efcfcab0cab46b81f2ede2150e75, type: 3}
-  m_Name:
-  m_EditorClassIdentifier: Assembly-CSharp::TruckCollision
-  enableGameOver: 1
-  respawnDelay: 2
-  explosionEffect: {fileID: 0}
-  crashSound: {fileID: 0}
-  gameOverPanel: {fileID: 0}
---- !u!114 &1000000002
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2073721153}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: da0caf46021c7484e85387607dd21c97, type: 3}
-  m_Name:
-  m_EditorClassIdentifier: Assembly-CSharp::ScoreTracker
-  pointsPerSecond: 10
-  distanceMultiplier: 1
-  scoreText: {fileID: 0}
-  distanceText: {fileID: 0}
-  timeText: {fileID: 0}
---- !u!114 &1000000003
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2073721153}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 47c018eeb9dab4230ad269310ae58080, type: 3}
-  m_Name:
-  m_EditorClassIdentifier: Assembly-CSharp::ActivityParticles
-  eatCount: 18
-  drinkCount: 14
-  honkCount: 10
+  cigarettesRemaining: 20
+  videoOverlay: {fileID: 0}
 --- !u!1001 &5343214846645156458
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -782,160 +1054,6 @@ PrefabInstance:
       insertIndex: -1
       addedObject: {fileID: 1000000003}
   m_SourcePrefab: {fileID: 100100000, guid: 0c097825d5389384fa2e1fa0c315d871, type: 3}
---- !u!1 &1000000010
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1000000011}
-  - component: {fileID: 1000000012}
-  m_Layer: 0
-  m_Name: UI_Manager
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &1000000011
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1000000010}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1000000012
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1000000010}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0b6071f897ff84c24951b7a7fc81e520, type: 3}
-  m_Name:
-  m_EditorClassIdentifier: Assembly-CSharp::TruckerUI
-  activityPanel: {fileID: 0}
-  activityText: {fileID: 0}
-  flashOverlay: {fileID: 0}
-  vignetteOverlay: {fileID: 0}
-  hotdogSprite: {fileID: 0}
-  bigGulpSprite: {fileID: 0}
-  roadBeerSprite: {fileID: 0}
-  honkSprite: {fileID: 0}
---- !u!1 &1000000020
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1000000021}
-  - component: {fileID: 1000000022}
-  m_Layer: 0
-  m_Name: AudioManager
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &1000000021
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1000000020}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1000000022
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1000000020}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 30cfaa921bdc9443e93dffeeeabc0471, type: 3}
-  m_Name:
-  m_EditorClassIdentifier: Assembly-CSharp::AudioManager
-  hornClip: {fileID: 0}
-  eatClip: {fileID: 0}
-  drinkClip: {fileID: 0}
-  burpClip: {fileID: 0}
-  crashClip: {fileID: 0}
-  sfxVolume: 1
-  hornVolume: 0.85
---- !u!1 &1000000030
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1000000031}
-  - component: {fileID: 1000000032}
-  m_Layer: 0
-  m_Name: RoadManager
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &1000000031
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1000000030}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1000000032
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1000000030}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: dcf8b481debfd3740b4fee1ab91751d6, type: 3}
-  m_Name:
-  m_EditorClassIdentifier: Assembly-CSharp::InfiniteRoadManager
-  roadChunkPrefab: {fileID: 0}
-  chunkLength: 100
-  chunkWidth: 15
-  chunksAhead: 3
-  chunksBehind: 1
-  roadSpeed: 20
-  playerTruck: {fileID: 0}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
@@ -949,3 +1067,4 @@ SceneRoots:
   - {fileID: 1000000011}
   - {fileID: 1000000021}
   - {fileID: 1000000031}
+  - {fileID: 1921177653}
