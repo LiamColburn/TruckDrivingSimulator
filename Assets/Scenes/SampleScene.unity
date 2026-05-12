@@ -296,7 +296,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::CameraFollow
   target: {fileID: 0}
-  offset: {x: 0, y: 5, z: -10}
+  offset: {x: 0, y: 1.5, z: 0}
   positionSmoothSpeed: 5
   bobSpeed: 1.2
   bobY: 0.03
@@ -545,6 +545,7 @@ GameObject:
   - component: {fileID: 1000000012}
   - component: {fileID: 1000000014}
   - component: {fileID: 1000000013}
+  - component: {fileID: 1000000015}
   m_Layer: 0
   m_Name: UI_Manager
   m_TagString: Untagged
@@ -623,6 +624,25 @@ MonoBehaviour:
   hotdogIcon: {fileID: 0}
   bigGulpIcon: {fileID: 0}
   roadBeerIcon: {fileID: 0}
+--- !u!114 &1000000015
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1000000010}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ff0257bb4562d4eb4b738e4e9071bef6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::TruckerDash
+  dashSprite: {fileID: 21300000, guid: 2e1ca77c322557641bd5fb3f01dadd14, type: 3}
+  wheelSprite: {fileID: 21300000, guid: f39e5856fbcf746fb827e8449ae598e4, type: 3}
+  wheelRotationAngle: -35
+  wheelRotationSpeed: 4
+  wheelSize: {x: 500, y: 500}
+  wheelPosition: {x: -500, y: 250}
+  playerController: {fileID: 0}
 --- !u!1 &1000000020
 GameObject:
   m_ObjectHideFlags: 0
@@ -904,10 +924,20 @@ MonoBehaviour:
   - 0
   - 4.66
   laneChangeDuration: 2.5
+  forwardSpeed: 0
+  autoForward: 0
   hotdogsRemaining: 10
   bigGulpsRemaining: 5
   roadBeersRemaining: 6
-  cigarettesRemaining: 20
+  eatDuration: 2
+  drinkDuration: 1.5
+  hornSound: {fileID: 0}
+  eatSound: {fileID: 0}
+  drinkSound: {fileID: 0}
+  burpSound: {fileID: 0}
+  truckerUI: {fileID: 0}
+  activityParticles: {fileID: 0}
+  dashOverlay: {fileID: 0}
   videoOverlay: {fileID: 0}
 --- !u!1001 &5343214846645156458
 PrefabInstance:
