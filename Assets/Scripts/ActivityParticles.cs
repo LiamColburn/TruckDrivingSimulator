@@ -23,6 +23,10 @@ public class ActivityParticles : MonoBehaviour
 
         ParticleSystem ps = go.AddComponent<ParticleSystem>();
 
+        // Assign a material — required in URP/Unity 6 or particles show pink
+        var rend = ps.GetComponent<ParticleSystemRenderer>();
+        rend.material = ParticleMaterial(color);
+
         var main = ps.main;
         main.startLifetime    = new ParticleSystem.MinMaxCurve(0.35f, 0.75f);
         main.startSpeed       = new ParticleSystem.MinMaxCurve(2f, 6f);
@@ -42,5 +46,25 @@ public class ActivityParticles : MonoBehaviour
         shape.radius    = 0.4f;
 
         ps.Play();
+    }
+
+    // Finds the first available particle-compatible shader across URP and Built-in
+    static Material ParticleMaterial(Color color)
+    {
+        string[] candidates = {
+            "Universal Render Pipeline/Particles/Unlit",
+            "Sprites/Default",
+            "Particles/Standard Unlit",
+            "Legacy Shaders/Particles/Alpha Blended Premultiply"
+        };
+        foreach (var shaderName in candidates)
+        {
+            var shader = Shader.Find(shaderName);
+            if (shader == null) continue;
+            var mat = new Material(shader);
+            mat.color = color;
+            return mat;
+        }
+        return null; // Unity will use its error material; not ideal but won't crash
     }
 }
