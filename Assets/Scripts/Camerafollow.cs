@@ -18,9 +18,9 @@ public class CameraFollow : MonoBehaviour
     [SerializeField] private float positionSmoothSpeed = 5f; // How fast camera catches up (higher = snappier)
 
     [Header("Idle Bob")]
-    [SerializeField] private float bobSpeed = 1.3f;
-    [SerializeField] private float bobY     = 0.04f;
-    [SerializeField] private float bobX     = 0.015f;
+    [SerializeField] private float bobSpeed = 1.2f;
+    [SerializeField] private float bobY     = 0.03f;
+    [SerializeField] private float bobX     = 0.01f;
 
     [Header("Lane Tilt")]
     [SerializeField] private float tiltAngle = 2.5f;
@@ -31,14 +31,15 @@ public class CameraFollow : MonoBehaviour
     [SerializeField] private float fovPulseSpeed     = 0.65f;
     [SerializeField] private float fovEffectDuration = 5f;
 
-    private Camera      cam;
-    private Quaternion  baseRotation;
-    private float       normalFOV;
+    private Camera     cam;
+    private Quaternion baseRotation;
+    private float      normalFOV;
 
-    private float currentTilt = 0f;
-    private float targetTilt  = 0f;
-    private bool  fovActive   = false;
-    private float fovElapsed  = 0f;
+    private float   currentTilt    = 0f;
+    private float   targetTilt     = 0f;
+    private bool    fovActive      = false;
+    private float   fovElapsed     = 0f;
+    private Vector3 followedPosition;  // lerp result before bob — keeps bob from drifting into the lerp
 
     void Start()
     {
@@ -64,7 +65,8 @@ public class CameraFollow : MonoBehaviour
         if (cam != null) normalFOV = cam.fieldOfView;
 
         // Set initial position immediately (no lerp on first frame)
-        transform.position = target.position + offset;
+        followedPosition   = target.position + offset;
+        transform.position = followedPosition;
     }
 
     void LateUpdate()
@@ -72,15 +74,15 @@ public class CameraFollow : MonoBehaviour
         if (target == null)
             return;
 
-        // Base follow — CameraFollow owns this, do not touch
+        // Base follow — lerp from the clean followed position (no bob in the from-value)
         Vector3 desiredPosition = target.position + offset;
-        transform.position = Vector3.Lerp(
-            transform.position,
+        followedPosition = Vector3.Lerp(
+            followedPosition,
             desiredPosition,
             positionSmoothSpeed * Time.deltaTime
         );
 
-        // Additive polish effects applied after base position is set
+        // Bob and tilt are pure deltas applied on top — followedPosition is never contaminated
         ApplyBob();
         ApplyTilt();
         ApplyFOV();
@@ -105,7 +107,7 @@ public class CameraFollow : MonoBehaviour
     void ApplyBob()
     {
         float t = Time.time * bobSpeed;
-        transform.position += new Vector3(
+        transform.position = followedPosition + new Vector3(
             Mathf.Sin(t * 0.65f) * bobX,
             Mathf.Sin(t)         * bobY,
             0f
