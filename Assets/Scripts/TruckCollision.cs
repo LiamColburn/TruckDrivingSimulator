@@ -1,5 +1,8 @@
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
+using TMPro;
  
 /// <summary>
 /// Collision detection - hit a vehicle = game over
@@ -22,6 +25,7 @@ public class TruckCollision : MonoBehaviour
     private bool hasCrashed = false;
     private int crashCount = 0;
     private TrafficSpawner trafficSpawner;
+    private GameObject explosionFallback;
  
     void Start()
     {
@@ -31,12 +35,9 @@ public class TruckCollision : MonoBehaviour
             audioSource = gameObject.AddComponent<AudioSource>();
         }
         
-        if (gameOverPanel != null)
-        {
-            gameOverPanel.SetActive(false);
-        }
-        
-        // Find traffic spawner (to remove crashed vehicles from active list)
+        EnsureGameOverPanel();
+        if (gameOverPanel != null) gameOverPanel.SetActive(false);
+
         trafficSpawner = FindFirstObjectByType<TrafficSpawner>();
     }
  
@@ -61,15 +62,16 @@ public class TruckCollision : MonoBehaviour
         
         // Play crash sound
         if (crashSound != null && audioSource != null)
-        {
             audioSource.PlayOneShot(crashSound);
-        }
-        
-        // Spawn explosion effect at collision point
-        if (explosionEffect != null)
+        AudioManager.Instance?.PlayCrash();
+
+        // Spawn explosion at midpoint between truck and hit vehicle
+        GameObject effectPrefab = explosionEffect != null ? explosionEffect : GetOrCreateExplosionFallback();
+        if (effectPrefab != null)
         {
             Vector3 explosionPos = (transform.position + hitVehicle.transform.position) / 2f;
-            Instantiate(explosionEffect, explosionPos, Quaternion.identity);
+            GameObject instance = Instantiate(effectPrefab, explosionPos, Quaternion.identity);
+            instance.SetActive(true); // needed when using the inactive fallback template
         }
         
         // Remove the hit vehicle from traffic system
@@ -169,4 +171,131 @@ public class TruckCollision : MonoBehaviour
     // Getters
     public int GetCrashCount() => crashCount;
     public bool HasCrashed() => hasCrashed;
+
+    // ── Game Over panel ───────────────────────────────────────────────────────
+
+    void EnsureGameOverPanel()
+    {
+        if (gameOverPanel != null) return;
+
+        // EventSystem is required for button clicks
+        if (FindFirstObjectByType<EventSystem>() == null)
+        {
+            GameObject es = new GameObject("EventSystem");
+            es.AddComponent<EventSystem>();
+            es.AddComponent<StandaloneInputModule>();
+        }
+
+        // Root canvas
+        GameObject canvasGO = new GameObject("GameOver_Canvas");
+        Canvas canvas = canvasGO.AddComponent<Canvas>();
+        canvas.renderMode   = RenderMode.ScreenSpaceOverlay;
+        canvas.sortingOrder = 50;
+
+        CanvasScaler scaler = canvasGO.AddComponent<CanvasScaler>();
+        scaler.uiScaleMode         = CanvasScaler.ScaleMode.ScaleWithScreenSize;
+        scaler.referenceResolution = new Vector2(1920f, 1080f);
+
+        canvasGO.AddComponent<GraphicRaycaster>();
+
+        // Full-screen dark panel
+        gameOverPanel = new GameObject("GameOver_Panel");
+        gameOverPanel.transform.SetParent(canvas.transform, false);
+        StretchToFill(gameOverPanel.AddComponent<RectTransform>());
+        Image bg = gameOverPanel.AddComponent<Image>();
+        bg.color = new Color(0f, 0f, 0f, 0.78f);
+
+        // "GAME OVER" title
+        AddTMPLabel(gameOverPanel.transform, "Title", "GAME OVER",
+            new Vector2(0.5f, 0.62f), new Vector2(700f, 130f),
+            80f, new Color(0.95f, 0.15f, 0.15f));
+
+        // Restart button
+        AddButton(gameOverPanel.transform, "RestartBtn", "RESTART",
+            new Vector2(0.5f, 0.42f), new Vector2(320f, 72f),
+            new Color(0.15f, 0.75f, 0.15f), OnRestartButton);
+
+        // Quit button
+        AddButton(gameOverPanel.transform, "QuitBtn", "QUIT",
+            new Vector2(0.5f, 0.28f), new Vector2(320f, 72f),
+            new Color(0.75f, 0.15f, 0.15f), OnQuitButton);
+    }
+
+    static void StretchToFill(RectTransform rt)
+    {
+        rt.anchorMin  = Vector2.zero;
+        rt.anchorMax  = Vector2.one;
+        rt.offsetMin  = Vector2.zero;
+        rt.offsetMax  = Vector2.zero;
+    }
+
+    static void AddTMPLabel(Transform parent, string name, string text,
+        Vector2 anchor, Vector2 size, float fontSize, Color color)
+    {
+        GameObject go = new GameObject(name);
+        go.transform.SetParent(parent, false);
+        RectTransform rt = go.AddComponent<RectTransform>();
+        rt.anchorMin = rt.anchorMax = anchor;
+        rt.sizeDelta = size;
+        rt.anchoredPosition = Vector2.zero;
+
+        TextMeshProUGUI tmp = go.AddComponent<TextMeshProUGUI>();
+        tmp.text      = text;
+        tmp.fontSize  = fontSize;
+        tmp.fontStyle = FontStyles.Bold;
+        tmp.alignment = TextAlignmentOptions.Center;
+        tmp.color     = color;
+    }
+
+    void AddButton(Transform parent, string name, string label,
+        Vector2 anchor, Vector2 size, Color bgColor,
+        UnityEngine.Events.UnityAction onClick)
+    {
+        GameObject go = new GameObject(name);
+        go.transform.SetParent(parent, false);
+        RectTransform rt = go.AddComponent<RectTransform>();
+        rt.anchorMin = rt.anchorMax = anchor;
+        rt.sizeDelta = size;
+        rt.anchoredPosition = Vector2.zero;
+
+        Image img = go.AddComponent<Image>();
+        img.color = bgColor;
+
+        Button btn = go.AddComponent<Button>();
+        btn.targetGraphic = img;
+        btn.onClick.AddListener(onClick);
+
+        AddTMPLabel(go.transform, "Label", label,
+            new Vector2(0.5f, 0.5f), size * 0.9f, 36f, Color.white);
+    }
+
+    // ── Explosion fallback ────────────────────────────────────────────────────
+
+    GameObject GetOrCreateExplosionFallback()
+    {
+        if (explosionFallback != null) return explosionFallback;
+
+        explosionFallback = new GameObject("ExplosionFallback");
+        explosionFallback.SetActive(false);
+
+        ParticleSystem ps = explosionFallback.AddComponent<ParticleSystem>();
+
+        var main = ps.main;
+        main.startLifetime = new ParticleSystem.MinMaxCurve(0.5f, 1.3f);
+        main.startSpeed    = new ParticleSystem.MinMaxCurve(4f, 12f);
+        main.startSize     = new ParticleSystem.MinMaxCurve(0.25f, 0.7f);
+        main.startColor    = new ParticleSystem.MinMaxGradient(Color.red, new Color(1f, 0.6f, 0f));
+        main.maxParticles  = 60;
+        main.stopAction    = ParticleSystemStopAction.Destroy;
+
+        var emission = ps.emission;
+        emission.rateOverTime = 0;
+        emission.SetBursts(new[] { new ParticleSystem.Burst(0f, 60) });
+
+        var shape = ps.shape;
+        shape.shapeType = ParticleSystemShapeType.Sphere;
+        shape.radius    = 1.2f;
+
+        return explosionFallback;
+    }
 }
