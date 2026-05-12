@@ -1,21 +1,45 @@
 using UnityEngine;
 
 /// <summary>
-/// Simple camera that stays in front of the cube/truck
-/// Fixed straight view, not affected by collisions or movement
+/// Simple camera that stays behind the cube/truck.
+/// Also handles idle bob, lane-change tilt, and road-beer FOV pulse
+/// as additive effects applied after the base follow lerp.
 /// </summary>
 public class CameraFollow : MonoBehaviour
 {
     [Header("Target")]
     [SerializeField] private Transform target; // The cube/truck to follow
-    
+
     [Header("Camera Position")]
     [SerializeField] private Vector3 offset = new Vector3(0f, 0f, 0f); // Position relative to target
-    // Y = height above, Z = distance in front
-    
+    // Y = height above, Z = distance behind
+
     [Header("Smoothing")]
     [SerializeField] private float positionSmoothSpeed = 5f; // How fast camera catches up (higher = snappier)
-    
+
+    [Header("Idle Bob")]
+    [SerializeField] private float bobSpeed = 1.3f;
+    [SerializeField] private float bobY     = 0.04f;
+    [SerializeField] private float bobX     = 0.015f;
+
+    [Header("Lane Tilt")]
+    [SerializeField] private float tiltAngle = 2.5f;
+    [SerializeField] private float tiltSpeed = 4f;
+
+    [Header("Road Beer FOV Pulse")]
+    [SerializeField] private float fovPulseAmount    = 5f;
+    [SerializeField] private float fovPulseSpeed     = 0.65f;
+    [SerializeField] private float fovEffectDuration = 5f;
+
+    private Camera      cam;
+    private Quaternion  baseRotation;
+    private float       normalFOV;
+
+    private float currentTilt = 0f;
+    private float targetTilt  = 0f;
+    private bool  fovActive   = false;
+    private float fovElapsed  = 0f;
+
     void Start()
     {
         // Auto-find target if not assigned
@@ -34,42 +58,86 @@ public class CameraFollow : MonoBehaviour
                 return;
             }
         }
-        
+
+        cam          = GetComponent<Camera>();
+        baseRotation = transform.rotation;
+        if (cam != null) normalFOV = cam.fieldOfView;
+
         // Set initial position immediately (no lerp on first frame)
         transform.position = target.position + offset;
     }
-    
+
     void LateUpdate()
     {
         if (target == null)
             return;
-        
-        // Calculate desired position (follows cube but maintains offset)
+
+        // Base follow — CameraFollow owns this, do not touch
         Vector3 desiredPosition = target.position + offset;
-        
-        // Smoothly move to desired position
         transform.position = Vector3.Lerp(
             transform.position,
             desiredPosition,
             positionSmoothSpeed * Time.deltaTime
         );
-        
-        // Rotation is now controlled manually in the Inspector - no forced rotation
+
+        // Additive polish effects applied after base position is set
+        ApplyBob();
+        ApplyTilt();
+        ApplyFOV();
     }
     
-    // Public methods for runtime adjustments
-    public void SetOffset(Vector3 newOffset)
+    // ── Polish effects (public API — signatures match deleted CameraController) ─
+
+    /// <summary>direction: -1 = turning left, 1 = turning right</summary>
+    public void TriggerLaneTilt(int direction)
     {
-        offset = newOffset;
+        targetTilt = direction * tiltAngle;
     }
-    
-    public void SetSmoothSpeed(float newSpeed)
+
+    public void TriggerRoadBeerEffect()
     {
-        positionSmoothSpeed = newSpeed;
+        fovActive  = true;
+        fovElapsed = 0f;
     }
-    
-    public void SetTarget(Transform newTarget)
+
+    // ── Internal effect helpers ───────────────────────────────────────────────
+
+    void ApplyBob()
     {
-        target = newTarget;
+        float t = Time.time * bobSpeed;
+        transform.position += new Vector3(
+            Mathf.Sin(t * 0.65f) * bobX,
+            Mathf.Sin(t)         * bobY,
+            0f
+        );
     }
+
+    void ApplyTilt()
+    {
+        currentTilt = Mathf.Lerp(currentTilt, targetTilt, Time.deltaTime * tiltSpeed);
+        targetTilt  = Mathf.Lerp(targetTilt,  0f,         Time.deltaTime * tiltSpeed * 0.45f);
+        transform.rotation = baseRotation * Quaternion.Euler(0f, 0f, currentTilt);
+    }
+
+    void ApplyFOV()
+    {
+        if (!fovActive || cam == null) return;
+
+        fovElapsed += Time.deltaTime;
+        float fade  = 1f - Mathf.Clamp01(fovElapsed / fovEffectDuration);
+        float pulse = Mathf.Sin(fovElapsed * fovPulseSpeed * Mathf.PI * 2f) * fovPulseAmount * fade;
+        cam.fieldOfView = normalFOV + pulse;
+
+        if (fovElapsed >= fovEffectDuration)
+        {
+            fovActive = false;
+            cam.fieldOfView = normalFOV;
+        }
+    }
+
+    // ── Runtime adjustment helpers ────────────────────────────────────────────
+
+    public void SetOffset(Vector3 newOffset)      => offset              = newOffset;
+    public void SetSmoothSpeed(float newSpeed)    => positionSmoothSpeed = newSpeed;
+    public void SetTarget(Transform newTarget)    => target              = newTarget;
 }
