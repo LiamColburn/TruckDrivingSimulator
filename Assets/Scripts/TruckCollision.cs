@@ -2,11 +2,13 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
+using UnityEngine.InputSystem;
 using TMPro;
  
 /// <summary>
 /// Collision detection - hit a vehicle = game over
 /// Works with "Vehicle" tag
+/// FIXED: Uses New Input System (Keyboard.current) instead of Input.GetKeyDown
 /// </summary>
 public class TruckCollision : MonoBehaviour
 {
@@ -141,10 +143,14 @@ public class TruckCollision : MonoBehaviour
  
     void Update()
     {
-        // Press R to restart after game over
-        if (hasCrashed && Input.GetKeyDown(KeyCode.R))
+        // Press R to restart after game over - FIXED: Uses New Input System
+        if (hasCrashed)
         {
-            RestartGame();
+            var keyboard = Keyboard.current;
+            if (keyboard != null && keyboard.rKey.wasPressedThisFrame)
+            {
+                RestartGame();
+            }
         }
     }
  
