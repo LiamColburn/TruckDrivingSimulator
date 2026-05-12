@@ -27,7 +27,6 @@ public class TruckCollision : MonoBehaviour
     private bool hasCrashed = false;
     private int crashCount = 0;
     private TrafficSpawner trafficSpawner;
-    private GameObject explosionFallback;
  
     void Start()
     {
@@ -67,13 +66,11 @@ public class TruckCollision : MonoBehaviour
             audioSource.PlayOneShot(crashSound);
         AudioManager.Instance?.PlayCrash();
 
-        // Spawn explosion at midpoint between truck and hit vehicle
-        GameObject effectPrefab = explosionEffect != null ? explosionEffect : GetOrCreateExplosionFallback();
-        if (effectPrefab != null)
+        // Spawn explosion centered on the truck, raised 1 unit so it's not in the ground
+        if (explosionEffect != null)
         {
-            Vector3 explosionPos = (transform.position + hitVehicle.transform.position) / 2f;
-            GameObject instance = Instantiate(effectPrefab, explosionPos, Quaternion.identity);
-            instance.SetActive(true); // needed when using the inactive fallback template
+            Vector3 spawnPos = transform.position + new Vector3(0f, 1f, 0f);
+            Instantiate(explosionEffect, spawnPos, Quaternion.identity);
         }
         
         // Remove the hit vehicle from traffic system
@@ -275,33 +272,4 @@ public class TruckCollision : MonoBehaviour
             new Vector2(0.5f, 0.5f), size * 0.9f, 36f, Color.white);
     }
 
-    // ── Explosion fallback ────────────────────────────────────────────────────
-
-    GameObject GetOrCreateExplosionFallback()
-    {
-        if (explosionFallback != null) return explosionFallback;
-
-        explosionFallback = new GameObject("ExplosionFallback");
-        explosionFallback.SetActive(false);
-
-        ParticleSystem ps = explosionFallback.AddComponent<ParticleSystem>();
-
-        var main = ps.main;
-        main.startLifetime = new ParticleSystem.MinMaxCurve(0.5f, 1.3f);
-        main.startSpeed    = new ParticleSystem.MinMaxCurve(4f, 12f);
-        main.startSize     = new ParticleSystem.MinMaxCurve(0.25f, 0.7f);
-        main.startColor    = new ParticleSystem.MinMaxGradient(Color.red, new Color(1f, 0.6f, 0f));
-        main.maxParticles  = 60;
-        main.stopAction    = ParticleSystemStopAction.Destroy;
-
-        var emission = ps.emission;
-        emission.rateOverTime = 0;
-        emission.SetBursts(new[] { new ParticleSystem.Burst(0f, 60) });
-
-        var shape = ps.shape;
-        shape.shapeType = ParticleSystemShapeType.Sphere;
-        shape.radius    = 1.2f;
-
-        return explosionFallback;
-    }
 }
