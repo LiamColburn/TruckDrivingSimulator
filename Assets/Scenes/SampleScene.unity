@@ -131,6 +131,7 @@ GameObject:
   - component: {fileID: 330585545}
   - component: {fileID: 330585544}
   - component: {fileID: 330585547}
+  - component: {fileID: 330585548}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -256,6 +257,28 @@ MonoBehaviour:
     m_VarianceClampScale: 0.9
     m_ContrastAdaptiveSharpening: 0
   m_Version: 2
+--- !u!114 &330585548
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 330585543}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 031a467d166a85849915a62286aa1ed1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::CameraFollow
+  target: {fileID: 0}
+  offset: {x: 0, y: 0, z: 0}
+  positionSmoothSpeed: 5
+  rotationSmoothSpeed: 5
+  useLookAhead: 1
+  lookAheadDistance: 5
+  lookAheadSmoothSpeed: 3
+  tiltOnTurn: 0
+  maxTiltAngle: 5
+  tiltSpeed: 3
 --- !u!1 &410087039
 GameObject:
   m_ObjectHideFlags: 0
@@ -445,6 +468,14 @@ PrefabInstance:
       value: RoadChunk
       objectReference: {fileID: 0}
     - target: {fileID: 8983267759934780835, guid: a3c5f4875687a6f409739eead1cb6e00, type: 3}
+      propertyPath: m_LocalScale.y
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8983267759934780835, guid: a3c5f4875687a6f409739eead1cb6e00, type: 3}
+      propertyPath: m_LocalScale.z
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 8983267759934780835, guid: a3c5f4875687a6f409739eead1cb6e00, type: 3}
       propertyPath: m_LocalPosition.x
       value: 1.32307
       objectReference: {fileID: 0}
@@ -489,11 +520,74 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: a3c5f4875687a6f409739eead1cb6e00, type: 3}
+--- !u!1 &2073721153 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 3620546173800811610, guid: 0c097825d5389384fa2e1fa0c315d871, type: 3}
+  m_PrefabInstance: {fileID: 8790498300027327805}
+  m_PrefabAsset: {fileID: 0}
 --- !u!4 &2073721157 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 1100593707649286349, guid: 0c097825d5389384fa2e1fa0c315d871, type: 3}
   m_PrefabInstance: {fileID: 8790498300027327805}
   m_PrefabAsset: {fileID: 0}
+--- !u!54 &2073721158
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2073721153}
+  serializedVersion: 5
+  m_Mass: 800
+  m_LinearDamping: 0
+  m_AngularDamping: 0.05
+  m_CenterOfMass: {x: 0, y: 0, z: 0}
+  m_InertiaTensor: {x: 1, y: 1, z: 1}
+  m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ImplicitCom: 1
+  m_ImplicitTensor: 1
+  m_UseGravity: 1
+  m_IsKinematic: 0
+  m_Interpolate: 0
+  m_Constraints: 114
+  m_CollisionDetection: 1
+--- !u!114 &2073721159
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2073721153}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a26e136ea27d06747a3e2eeaa42ab13b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::TruckPlayerController
+  laneXPositions:
+  - -4.66
+  - 0
+  - 4.66
+  laneChangeDuration: 2.5
+  forwardSpeed: 0
+  autoForward: 0
+  hotdogsRemaining: 10
+  bigGulpsRemaining: 5
+  roadBeersRemaining: 6
+  eatDuration: 2
+  drinkDuration: 1.5
+  hornSound: {fileID: 0}
+  eatSound: {fileID: 0}
+  drinkSound: {fileID: 0}
+  burpSound: {fileID: 0}
+  truckerUI: {fileID: 0}
+  cameraController: {fileID: 0}
+  activityParticles: {fileID: 0}
 --- !u!1001 &5343214846645156458
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -569,11 +663,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1100593707649286349, guid: 0c097825d5389384fa2e1fa0c315d871, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 1.5
+      value: 1.6
       objectReference: {fileID: 0}
     - target: {fileID: 1100593707649286349, guid: 0c097825d5389384fa2e1fa0c315d871, type: 3}
       propertyPath: m_LocalPosition.z
-      value: -11.95
+      value: -10.6
       objectReference: {fileID: 0}
     - target: {fileID: 1100593707649286349, guid: 0c097825d5389384fa2e1fa0c315d871, type: 3}
       propertyPath: m_LocalRotation.w
@@ -603,14 +697,32 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 3505154041230603132, guid: 0c097825d5389384fa2e1fa0c315d871, type: 3}
+      propertyPath: m_Size.y
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 3505154041230603132, guid: 0c097825d5389384fa2e1fa0c315d871, type: 3}
+      propertyPath: m_IsTrigger
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 3620546173800811610, guid: 0c097825d5389384fa2e1fa0c315d871, type: 3}
       propertyPath: m_Name
       value: Cube
       objectReference: {fileID: 0}
+    - target: {fileID: 3620546173800811610, guid: 0c097825d5389384fa2e1fa0c315d871, type: 3}
+      propertyPath: m_TagString
+      value: Player
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 3620546173800811610, guid: 0c097825d5389384fa2e1fa0c315d871, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 2073721158}
+    - targetCorrespondingSourceObject: {fileID: 3620546173800811610, guid: 0c097825d5389384fa2e1fa0c315d871, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 2073721159}
   m_SourcePrefab: {fileID: 100100000, guid: 0c097825d5389384fa2e1fa0c315d871, type: 3}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:

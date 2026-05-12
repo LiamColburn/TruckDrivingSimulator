@@ -2,8 +2,11 @@ using UnityEngine;
 using System.Collections.Generic;
  
 /// <summary>
-/// Traffic system with object pooling - spawns vehicles, moves them backward, recycles when behind player
+/// Traffic system with object pooling - spawns vehicles ahead of player
+/// Cars face FORWARD (same direction as player's out-of-control truck)
+/// Cars move BACKWARD toward player, creating effect of player catching up to traffic
 /// Cars are reused instead of destroyed/instantiated for better performance
+/// UPDATED: Spawns much closer to cube for better visibility
 /// </summary>
 public class TrafficSpawner : MonoBehaviour
 {
@@ -20,11 +23,11 @@ public class TrafficSpawner : MonoBehaviour
     
     [Header("Movement")]
     [SerializeField] private float vehicleSpeed = 20f; // How fast cars move backward (relative to truck)
-    [SerializeField] private float spawnDistance = 150f; // How far ahead to spawn
-    [SerializeField] private float despawnDistance = -50f; // Z position to despawn (behind truck)
+    [SerializeField] private float spawnDistance = 40f; // CLOSER! Spawn 40 units ahead instead of 150
+    [SerializeField] private float despawnDistance = -30f; // Z position to despawn (behind truck)
     
     [Header("References")]
-    [SerializeField] private Transform playerTruck; // Your truck
+    [SerializeField] private Transform playerTruck; // Your truck/cube
     
     // Object pool for reusing vehicles
     private List<GameObject> vehiclePool = new List<GameObject>();
@@ -70,7 +73,7 @@ public class TrafficSpawner : MonoBehaviour
         {
             // Pick random prefab
             GameObject prefab = vehiclePrefabs[Random.Range(0, vehiclePrefabs.Length)];
-            GameObject vehicle = Instantiate(prefab, Vector3.zero, Quaternion.Euler(0, 180, 0));
+            GameObject vehicle = Instantiate(prefab, Vector3.zero, Quaternion.Euler(0, 0, 0)); // Face forward
             vehicle.name = $"{prefab.name}_Pooled";
             vehicle.transform.SetParent(transform);
             vehicle.SetActive(false); // Start inactive
@@ -129,7 +132,7 @@ public class TrafficSpawner : MonoBehaviour
         {
             Debug.LogWarning("No available vehicles in pool! Creating new one...");
             GameObject prefab = vehiclePrefabs[Random.Range(0, vehiclePrefabs.Length)];
-            vehicle = Instantiate(prefab, Vector3.zero, Quaternion.Euler(0, 180, 0));
+            vehicle = Instantiate(prefab, Vector3.zero, Quaternion.Euler(0, 0, 0)); // Face forward
             vehicle.name = $"{prefab.name}_Extra";
             vehicle.transform.SetParent(transform);
             vehicle.tag = "Vehicle";
@@ -153,7 +156,7 @@ public class TrafficSpawner : MonoBehaviour
         
         // Position vehicle
         vehicle.transform.position = new Vector3(laneX, 0f, spawnZ);
-        vehicle.transform.rotation = Quaternion.Euler(0, 180, 0); // Face toward player
+        vehicle.transform.rotation = Quaternion.Euler(0, 0, 0); // Face FORWARD (same direction as cube/truck)
         vehicle.SetActive(true);
         
         // Add to active list
@@ -216,9 +219,9 @@ public class TrafficSpawner : MonoBehaviour
                 continue;
             }
             
-            // Move vehicle backward (toward and past player)
-            // Using Space.Self with rotation 180 means forward = toward player
-            vehicle.transform.Translate(Vector3.forward * vehicleSpeed * Time.deltaTime, Space.Self);
+            // Move vehicle backward (toward cube) even though it faces forward
+            // This creates the effect of the player catching up to traffic ahead
+            vehicle.transform.Translate(Vector3.back * vehicleSpeed * Time.deltaTime, Space.Self);
             
             // Check if behind despawn line
             if (vehicle.transform.position.z < playerTruck.position.z + despawnDistance)
