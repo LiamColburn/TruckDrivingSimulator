@@ -1,60 +1,91 @@
 using UnityEngine;
 
 /// <summary>
-/// Attach to the TruckExplosion prefab.
-/// Configures three pre-baked child particle systems (Fire, Smoke, Sparks)
-/// and plays them on Awake. The whole hierarchy self-destructs after 5 s.
-///
-/// The child GameObjects must exist in the prefab hierarchy already (they are
-/// baked into TruckExplosion.prefab). Each child's ParticleSystemRenderer
-/// has Default-Particle assigned in YAML; this script also sets it via
-/// Resources.GetBuiltinResource as a runtime safety-net.
+/// Fully code-driven explosion effect — no prefab required.
+/// TruckCollision spawns this by creating a bare GameObject and calling
+/// AddComponent&lt;TruckExplosionEffect&gt;(). Start() builds three particle
+/// layers entirely in code and schedules self-destruction after 3 s.
 /// </summary>
 public class TruckExplosionEffect : MonoBehaviour
 {
-    void Awake()
+    void Start()
     {
-        ConfigureFire(transform.Find("Fire")?.GetComponent<ParticleSystem>());
-        ConfigureSmoke(transform.Find("Smoke")?.GetComponent<ParticleSystem>());
-        ConfigureSparks(transform.Find("Sparks")?.GetComponent<ParticleSystem>());
-        Destroy(gameObject, 5f);
+        Material mat = new Material(
+            Shader.Find("Universal Render Pipeline/Particles/Unlit"));
+        mat.SetFloat("_Surface", 1);        // 1 = Transparent
+        mat.SetFloat("_Blend", 0);          // 0 = Alpha blend
+        mat.SetFloat("_SrcBlend", 5f);
+        mat.SetFloat("_DstBlend", 10f);
+        mat.EnableKeyword("_SURFACE_TYPE_TRANSPARENT");
+        mat.renderQueue = 3000;
+        mat.mainTexture = CreateSoftCircle();
+
+        BuildFire(mat);
+        BuildSmoke(mat);
+        BuildSparks(mat);
+
+        Destroy(gameObject, 3f);
     }
 
     // ── helpers ───────────────────────────────────────────────────────────────
 
-    /// <summary>
-    /// Assign Default-Particle material to the renderer — guarantees the
-    /// particles are never rendered as a purple error blob at runtime.
-    /// </summary>
-    static void EnsureMaterial(ParticleSystem ps)
+    static void SetMaterial(ParticleSystem ps, Material mat)
     {
-        if (ps == null) return;
-        var psr = ps.GetComponent<ParticleSystemRenderer>();
-        if (psr == null) return;
-        var mat = Resources.GetBuiltinResource<Material>("Default-Particle.mat");
-        if (mat != null) psr.material = mat;
+        ps.GetComponent<ParticleSystemRenderer>().material = mat;
     }
 
-    // ── layer configurators ───────────────────────────────────────────────────
-
-    void ConfigureFire(ParticleSystem ps)
+    static ParticleSystem MakeChildPS(Transform parent, string childName, Material mat)
     {
-        if (ps == null) return;
-        EnsureMaterial(ps);
+        var go = new GameObject(childName);
+        go.transform.SetParent(parent, false);
+        var ps = go.AddComponent<ParticleSystem>();
+        ps.Stop(true, ParticleSystemStopBehavior.StopEmittingAndClear);
+        SetMaterial(ps, mat);
+        return ps;
+    }
+
+    // ── layers ────────────────────────────────────────────────────────────────
+
+    // ── texture ───────────────────────────────────────────────────────────────
+
+    private Texture2D CreateSoftCircle()
+    {
+        int size = 64;
+        var tex = new Texture2D(size, size, TextureFormat.RGBA32, false);
+        var center = new Vector2(size / 2f, size / 2f);
+        for (int x = 0; x < size; x++)
+        {
+            for (int y = 0; y < size; y++)
+            {
+                float dist  = Vector2.Distance(new Vector2(x, y), center) / (size / 2f);
+                float alpha = Mathf.Clamp01(1f - dist);
+                alpha *= alpha;
+                tex.SetPixel(x, y, new Color(1f, 1f, 1f, alpha));
+            }
+        }
+        tex.Apply();
+        return tex;
+    }
+
+    void BuildFire(Material mat)
+    {
+        // Main burst — on the root GameObject itself
+        var ps = gameObject.AddComponent<ParticleSystem>();
+        ps.Stop(true, ParticleSystemStopBehavior.StopEmittingAndClear);
+        SetMaterial(ps, mat);
 
         var main = ps.main;
         main.loop            = false;
-        main.duration        = 0.1f;
-        main.startLifetime   = new ParticleSystem.MinMaxCurve(0.6f, 1.5f);
+        main.duration        = 0.5f;
+        main.startLifetime   = new ParticleSystem.MinMaxCurve(0.8f, 1.5f);
         main.startSpeed      = new ParticleSystem.MinMaxCurve(8f, 15f);
-        main.startSize       = new ParticleSystem.MinMaxCurve(2f, 4f);
+        main.startSize       = new ParticleSystem.MinMaxCurve(0.5f, 1.5f);
         main.startColor      = new ParticleSystem.MinMaxGradient(
                                    new Color(1f, 0.45f, 0f),
                                    new Color(1f, 0.15f, 0f));
         main.gravityModifier = new ParticleSystem.MinMaxCurve(-0.15f);
         main.simulationSpace = ParticleSystemSimulationSpace.World;
         main.maxParticles    = 80;
-        main.stopAction      = ParticleSystemStopAction.Destroy;
 
         var emission = ps.emission;
         emission.rateOverTime = 0;
@@ -67,10 +98,9 @@ public class TruckExplosionEffect : MonoBehaviour
         ps.Play();
     }
 
-    void ConfigureSmoke(ParticleSystem ps)
+    void BuildSmoke(Material mat)
     {
-        if (ps == null) return;
-        EnsureMaterial(ps);
+        var ps = MakeChildPS(transform, "Smoke", mat);
 
         var main = ps.main;
         main.loop            = false;
@@ -78,14 +108,13 @@ public class TruckExplosionEffect : MonoBehaviour
         main.startDelay      = new ParticleSystem.MinMaxCurve(0.1f);
         main.startLifetime   = new ParticleSystem.MinMaxCurve(2.5f, 4f);
         main.startSpeed      = new ParticleSystem.MinMaxCurve(1f, 3f);
-        main.startSize       = new ParticleSystem.MinMaxCurve(3f, 5f);
+        main.startSize       = new ParticleSystem.MinMaxCurve(1f, 2f);
         main.startColor      = new ParticleSystem.MinMaxGradient(
                                    new Color(0.2f, 0.2f, 0.2f, 0.85f),
                                    new Color(0.12f, 0.12f, 0.12f, 0.9f));
-        main.gravityModifier = new ParticleSystem.MinMaxCurve(-0.3f);   // rises
+        main.gravityModifier = new ParticleSystem.MinMaxCurve(-0.3f);
         main.simulationSpace = ParticleSystemSimulationSpace.World;
         main.maxParticles    = 30;
-        main.stopAction      = ParticleSystemStopAction.Destroy;
 
         var emission = ps.emission;
         emission.rateOverTime = 0;
@@ -98,23 +127,21 @@ public class TruckExplosionEffect : MonoBehaviour
         ps.Play();
     }
 
-    void ConfigureSparks(ParticleSystem ps)
+    void BuildSparks(Material mat)
     {
-        if (ps == null) return;
-        EnsureMaterial(ps);
+        var ps = MakeChildPS(transform, "Sparks", mat);
 
         var main = ps.main;
         main.loop            = false;
         main.duration        = 0.1f;
         main.startLifetime   = new ParticleSystem.MinMaxCurve(0.5f, 0.8f);
         main.startSpeed      = new ParticleSystem.MinMaxCurve(15f, 25f);
-        main.startSize       = new ParticleSystem.MinMaxCurve(0.1f, 0.2f);
+        main.startSize       = new ParticleSystem.MinMaxCurve(0.05f, 0.15f);
         main.startColor      = new ParticleSystem.MinMaxGradient(
                                    Color.white, new Color(1f, 1f, 0.35f));
-        main.gravityModifier = new ParticleSystem.MinMaxCurve(1.2f);    // falls
+        main.gravityModifier = new ParticleSystem.MinMaxCurve(1.2f);
         main.simulationSpace = ParticleSystemSimulationSpace.World;
         main.maxParticles    = 60;
-        main.stopAction      = ParticleSystemStopAction.Destroy;
 
         var emission = ps.emission;
         emission.rateOverTime = 0;
