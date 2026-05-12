@@ -31,7 +31,12 @@ public class TruckPlayerController : MonoBehaviour
     [SerializeField] private AudioClip eatSound;
     [SerializeField] private AudioClip drinkSound;
     [SerializeField] private AudioClip burpSound;
-    
+
+    [Header("UI & Effects")]
+    [SerializeField] private TruckerUI truckerUI;
+    [SerializeField] private CameraController cameraController;
+    [SerializeField] private ActivityParticles activityParticles;
+
     private AudioSource hornAudioSource;
     
     // Internal state
@@ -56,16 +61,11 @@ public class TruckPlayerController : MonoBehaviour
         {
             hornAudioSource = gameObject.AddComponent<AudioSource>();
         }
-        
-        // // Find TruckerUI if not assigned
-        // if (truckerUI == null)
-        // {
-        //     truckerUI = FindObjectOfType<TruckerUI>();
-        // }
-        
-        // // Update UI
-        // UpdateUI();
-        
+
+        if (truckerUI        == null) truckerUI        = FindFirstObjectByType<TruckerUI>();
+        if (cameraController == null) cameraController = FindFirstObjectByType<CameraController>();
+        if (activityParticles == null) activityParticles = GetComponentInChildren<ActivityParticles>();
+
         Debug.Log("Truck driver ready! Controls: A/D or Arrow Keys = Change Lanes, H = Hotdog, G = Big Gulp, B = Road Beer, Space = Horn");
     }
  
@@ -132,7 +132,9 @@ public class TruckPlayerController : MonoBehaviour
         
         laneChangeStartPos = transform.position;
         laneChangeTargetPos = new Vector3(laneXPositions[targetLane], transform.position.y, transform.position.z);
-        
+
+        cameraController?.TriggerLaneTilt(direction);
+
         string[] laneNames = new string[] { "left", "center", "right" };
         Debug.Log($"Changing to {laneNames[targetLane]} lane...");
     }
@@ -191,9 +193,11 @@ public class TruckPlayerController : MonoBehaviour
         activityTimer = eatDuration;
         
         Debug.Log($"Munchin' on a hotdog... ({hotdogsRemaining} left)");
-        
+
         PlaySound(eatSound);
-        //UpdateUI();
+        truckerUI?.ShowEating(eatDuration);
+        activityParticles?.SpawnEatBurst();
+        AudioManager.Instance?.PlayEat();
     }
  
     void DrinkBigGulp()
@@ -216,9 +220,11 @@ public class TruckPlayerController : MonoBehaviour
         activityTimer = drinkDuration;
         
         Debug.Log($"Sippin' on a Big Gulp... ({bigGulpsRemaining} left)");
-        
+
         PlaySound(drinkSound);
-        //UpdateUI();
+        truckerUI?.ShowDrinking(drinkDuration);
+        activityParticles?.SpawnDrinkBurst();
+        AudioManager.Instance?.PlayDrink();
     }
  
     void DrinkRoadBeer()
@@ -241,32 +247,35 @@ public class TruckPlayerController : MonoBehaviour
         activityTimer = drinkDuration;
         
         Debug.Log($"Crackin' a cold one... ({roadBeersRemaining} left)");
-        
+
         PlaySound(drinkSound);
-        
+        truckerUI?.ShowRoadBeer(drinkDuration);
+        activityParticles?.SpawnDrinkBurst();
+        cameraController?.TriggerRoadBeerEffect();
+        AudioManager.Instance?.PlayDrink();
+
         // Road beers make you drive slightly wonky (optional effect)
         StartCoroutine(RoadBeerEffect());
-        
-        //UpdateUI();
     }
  
     void HonkHorn()
     {
         hornsHonked++;
-        
+
         Debug.Log("HONK HONK! 🚚");
-        
+
         if (hornSound != null && hornAudioSource != null)
         {
             hornAudioSource.PlayOneShot(hornSound);
         }
         else
         {
-            // Fallback beep if no sound assigned
             Debug.Log("*HORN SOUND*");
         }
-        
-        //UpdateUI();
+
+        truckerUI?.ShowHonk();
+        activityParticles?.SpawnHonkPuff();
+        AudioManager.Instance?.PlayHorn();
     }
  
     void HandleActivities()
@@ -287,6 +296,7 @@ public class TruckPlayerController : MonoBehaviour
                 {
                     Debug.Log("*BURP* That hit the spot.");
                     PlaySound(burpSound);
+                    AudioManager.Instance?.PlayBurp();
                     isDrinking = false;
                 }
             }
