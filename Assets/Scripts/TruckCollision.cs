@@ -17,7 +17,6 @@ public class TruckCollision : MonoBehaviour
     [SerializeField] private float respawnDelay = 2f;
     
     [Header("Visual Feedback")]
-    [SerializeField] private GameObject explosionEffect;
     [SerializeField] private AudioClip crashSound;
     
     [Header("UI")]
@@ -66,12 +65,10 @@ public class TruckCollision : MonoBehaviour
             audioSource.PlayOneShot(crashSound);
         AudioManager.Instance?.PlayCrash();
 
-        // Spawn explosion centered on the truck, raised 1 unit so it's not in the ground
-        if (explosionEffect != null)
-        {
-            Vector3 spawnPos = transform.position + new Vector3(0f, 1f, 0f);
-            Instantiate(explosionEffect, spawnPos, Quaternion.identity);
-        }
+        // Spawn explosion — fully code-driven, no prefab dependency
+        var exp = new GameObject("Explosion");
+        exp.transform.position = transform.position + Vector3.up;
+        exp.AddComponent<TruckExplosionEffect>();
         
         // Remove the hit vehicle from traffic system
         if (trafficSpawner != null)
