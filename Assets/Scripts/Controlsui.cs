@@ -11,7 +11,7 @@ public class ControlsUI : MonoBehaviour
     [Header("Settings")]
     [SerializeField] private KeyCode toggleKey = KeyCode.Tab;
     [SerializeField] private bool showOnStart = true;
-    [SerializeField] private float autoHideDelay = 30f; // Hide after 30 seconds
+    [SerializeField] private float autoHideDelay = 5f; // Hide after 5 seconds
     
     [Header("UI (auto-created if null)")]
     [SerializeField] private GameObject controlsPanel;
@@ -116,7 +116,7 @@ public class ControlsUI : MonoBehaviour
         panelRT.anchorMax = new Vector2(0f, 0f);
         panelRT.pivot     = new Vector2(0f, 0f);
         panelRT.anchoredPosition = new Vector2(20f, 20f);
-        panelRT.sizeDelta = new Vector2(400f, 280f);
+        panelRT.sizeDelta = new Vector2(400f, 310f);
 
         // Background
         Image bg = controlsPanel.AddComponent<Image>();
@@ -156,10 +156,14 @@ public class ControlsUI : MonoBehaviour
         AddControlText(controlsPanel.transform, "Horn", 
             "<b>SPACE</b>  Honk Horn", 
             new Vector2(0f, yStart + ySpacing * 5), 24f);
+
+        AddControlText(controlsPanel.transform, "Cig", 
+            "<b>C</b>  Light Cigarette", 
+            new Vector2(0f, yStart + ySpacing * 6), 24f);
         
         AddControlText(controlsPanel.transform, "Toggle", 
             "<b>TAB</b>  Toggle Controls", 
-            new Vector2(0f, yStart + ySpacing * 6), 20f, 
+            new Vector2(0f, yStart + ySpacing * 7), 20f, 
             new Color(0.7f, 0.7f, 0.7f));
 
         Debug.Log("ControlsUI: Auto-created controls panel");
