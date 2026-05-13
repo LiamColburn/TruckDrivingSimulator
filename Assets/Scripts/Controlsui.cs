@@ -11,7 +11,7 @@ public class ControlsUI : MonoBehaviour
     [Header("Settings")]
     [SerializeField] private KeyCode toggleKey = KeyCode.Tab;
     [SerializeField] private bool showOnStart = true;
-    [SerializeField] private float autoHideDelay = 5f; // Hide after 5 seconds
+    [SerializeField] private float autoHideDelay = 30f; // Hide after 5 seconds
     
     [Header("UI (auto-created if null)")]
     [SerializeField] private GameObject controlsPanel;
