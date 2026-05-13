@@ -3,7 +3,7 @@ using TMPro;
 using UnityEngine.UI;
 
 /// <summary>
-/// Displays trucker inventory (hotdogs, drinks, beers) in a clean HUD panel.
+/// Displays trucker inventory (hotdogs, drinks, beers, cigarettes) in a clean HUD panel.
 /// Auto-creates UI if not assigned. Place on a GameObject in the scene.
 /// </summary>
 public class TruckerInventoryUI : MonoBehaviour
@@ -16,11 +16,13 @@ public class TruckerInventoryUI : MonoBehaviour
     [SerializeField] private TextMeshProUGUI hotdogText;
     [SerializeField] private TextMeshProUGUI bigGulpText;
     [SerializeField] private TextMeshProUGUI roadBeerText;
+    [SerializeField] private TextMeshProUGUI cigaretteText;
     
     [Header("Optional Icons")]
     [SerializeField] private Sprite hotdogIcon;
     [SerializeField] private Sprite bigGulpIcon;
     [SerializeField] private Sprite roadBeerIcon;
+    [SerializeField] private Sprite cigaretteIcon;
     
     private Canvas hudCanvas;
 
@@ -31,7 +33,7 @@ public class TruckerInventoryUI : MonoBehaviour
             playerController = FindFirstObjectByType<TruckPlayerController>();
         }
         
-        if (inventoryPanel == null || hotdogText == null || bigGulpText == null || roadBeerText == null)
+        if (inventoryPanel == null || hotdogText == null || bigGulpText == null || roadBeerText == null || cigaretteText == null)
         {
             BuildInventoryUI();
         }
@@ -67,6 +69,13 @@ public class TruckerInventoryUI : MonoBehaviour
             roadBeerText.text = $"🍺 x{count}";
             roadBeerText.color = count > 0 ? new Color(1f, 0.85f, 0.25f) : new Color(0.5f, 0.5f, 0.5f);
         }
+
+        if (cigaretteText != null)
+        {
+            int count = playerController.GetCigarettesRemaining();
+            cigaretteText.text = $"🚬 x{count}";
+            cigaretteText.color = count > 0 ? new Color(0.85f, 0.85f, 0.9f) : new Color(0.5f, 0.5f, 0.5f);
+        }
     }
 
     // ── UI Auto-Build ─────────────────────────────────────────────────────────
@@ -90,7 +99,7 @@ public class TruckerInventoryUI : MonoBehaviour
             canvasGO.AddComponent<GraphicRaycaster>();
         }
 
-        // Create inventory panel (top-left corner)
+        // Create inventory panel (top-left corner) - made taller for 4 items
         inventoryPanel = new GameObject("InventoryPanel");
         inventoryPanel.transform.SetParent(hudCanvas.transform, false);
 
@@ -99,7 +108,7 @@ public class TruckerInventoryUI : MonoBehaviour
         panelRT.anchorMax = new Vector2(0f, 1f);
         panelRT.pivot     = new Vector2(0f, 1f);
         panelRT.anchoredPosition = new Vector2(20f, -20f); // 20px padding from corner
-        panelRT.sizeDelta = new Vector2(220f, 180f);
+        panelRT.sizeDelta = new Vector2(220f, 220f); // Increased height for 4 items
 
         // Semi-transparent background
         Image panelBg = inventoryPanel.AddComponent<Image>();
@@ -108,12 +117,13 @@ public class TruckerInventoryUI : MonoBehaviour
         // Title
         CreateTitle(inventoryPanel.transform);
         
-        // Create item displays
-        CreateItemText(inventoryPanel.transform, "HotdogText", new Vector2(0f, 25f), out hotdogText);
-        CreateItemText(inventoryPanel.transform, "BigGulpText", new Vector2(0f, -15f), out bigGulpText);
-        CreateItemText(inventoryPanel.transform, "RoadBeerText", new Vector2(0f, -55f), out roadBeerText);
+        // Create item displays (adjusted Y positions for 4 items)
+        CreateItemText(inventoryPanel.transform, "HotdogText", new Vector2(0f, 35f), out hotdogText);
+        CreateItemText(inventoryPanel.transform, "BigGulpText", new Vector2(0f, 0f), out bigGulpText);
+        CreateItemText(inventoryPanel.transform, "RoadBeerText", new Vector2(0f, -35f), out roadBeerText);
+        CreateItemText(inventoryPanel.transform, "CigaretteText", new Vector2(0f, -70f), out cigaretteText);
 
-        Debug.Log("TruckerInventoryUI: Auto-created inventory panel in top-left corner");
+        Debug.Log("TruckerInventoryUI: Auto-created inventory panel with cigarettes in top-left corner");
     }
 
     void CreateTitle(Transform parent)

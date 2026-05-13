@@ -16,6 +16,7 @@ public class AudioManager : MonoBehaviour
     [SerializeField] private AudioClip drinkClip;
     [SerializeField] private AudioClip burpClip;
     [SerializeField] private AudioClip crashClip;
+    [SerializeField] private AudioClip smokeClip;
 
     [Header("Volume")]
     [SerializeField] [Range(0f, 1f)] private float sfxVolume  = 1f;
@@ -48,6 +49,8 @@ public class AudioManager : MonoBehaviour
     public void PlayDrink() => Play(drinkClip);
     public void PlayBurp()  => Play(burpClip);
     public void PlayCrash() => Play(crashClip);
+
+    public void PlaySmoke() => Play(smokeClip);
 
     // ── internal ──────────────────────────────────────────────────────────────
 

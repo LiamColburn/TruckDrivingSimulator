@@ -99,6 +99,7 @@ public class ScoreTracker : MonoBehaviour
     public int hornBonus = 50;
     public int smokingBonus = 400;
 
+
     [Header("UI (auto-created if null)")]
     [SerializeField] private TextMeshProUGUI scoreText;
     [SerializeField] private TextMeshProUGUI distanceText;
@@ -231,6 +232,7 @@ public class ScoreTracker : MonoBehaviour
 
         Destroy(popupGO);
     }
+
 
     // ── UI Auto-Build ─────────────────────────────────────────────────────────
 

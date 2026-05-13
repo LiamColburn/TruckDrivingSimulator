@@ -119,108 +119,6 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
---- !u!1001 &12174939
-PrefabInstance:
-  m_ObjectHideFlags: 0
-  serializedVersion: 2
-  m_Modification:
-    serializedVersion: 3
-    m_TransformParent: {fileID: 0}
-    m_Modifications:
-    - target: {fileID: 6071620958876976598, guid: 225e5a227c87b694d91b9d5c99706d75, type: 3}
-      propertyPath: m_Name
-      value: RoadChunk
-      objectReference: {fileID: 0}
-    - target: {fileID: 7092100926508391980, guid: 225e5a227c87b694d91b9d5c99706d75, type: 3}
-      propertyPath: m_LocalPosition.x
-      value: 1.32
-      objectReference: {fileID: 0}
-    - target: {fileID: 7092100926508391980, guid: 225e5a227c87b694d91b9d5c99706d75, type: 3}
-      propertyPath: m_LocalPosition.y
-      value: -1.7
-      objectReference: {fileID: 0}
-    - target: {fileID: 7092100926508391980, guid: 225e5a227c87b694d91b9d5c99706d75, type: 3}
-      propertyPath: m_LocalPosition.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 7092100926508391980, guid: 225e5a227c87b694d91b9d5c99706d75, type: 3}
-      propertyPath: m_LocalRotation.w
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 7092100926508391980, guid: 225e5a227c87b694d91b9d5c99706d75, type: 3}
-      propertyPath: m_LocalRotation.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 7092100926508391980, guid: 225e5a227c87b694d91b9d5c99706d75, type: 3}
-      propertyPath: m_LocalRotation.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 7092100926508391980, guid: 225e5a227c87b694d91b9d5c99706d75, type: 3}
-      propertyPath: m_LocalRotation.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 7092100926508391980, guid: 225e5a227c87b694d91b9d5c99706d75, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 7092100926508391980, guid: 225e5a227c87b694d91b9d5c99706d75, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 7092100926508391980, guid: 225e5a227c87b694d91b9d5c99706d75, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.z
-      value: 0
-      objectReference: {fileID: 0}
-    m_RemovedComponents: []
-    m_RemovedGameObjects: []
-    m_AddedGameObjects: []
-    m_AddedComponents: []
-  m_SourcePrefab: {fileID: 100100000, guid: 225e5a227c87b694d91b9d5c99706d75, type: 3}
---- !u!1 &103134305
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 103134307}
-  - component: {fileID: 103134306}
-  m_Layer: 0
-  m_Name: PauseMenuUI
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!114 &103134306
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 103134305}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f146161d2a9c90540b83ddb465343546, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::PauseMenuUI
-  pausePanel: {fileID: 0}
---- !u!4 &103134307
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 103134305}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &330585543
 GameObject:
   m_ObjectHideFlags: 0
@@ -372,7 +270,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::CameraFollow
   target: {fileID: 0}
-  offset: {x: 0, y: 1.5, z: 0}
+  offset: {x: 0, y: 0, z: 0}
   positionSmoothSpeed: 5
   bobSpeed: 1.2
   bobY: 0.03
@@ -509,11 +407,6 @@ MonoBehaviour:
   m_ShadowLayerMask: 1
   m_RenderingLayers: 1
   m_ShadowRenderingLayers: 1
---- !u!1 &480795831 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 6071620958876976598, guid: 225e5a227c87b694d91b9d5c99706d75, type: 3}
-  m_PrefabInstance: {fileID: 12174939}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &832575517
 GameObject:
   m_ObjectHideFlags: 0
@@ -577,6 +470,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::TruckCollision
   enableGameOver: 1
   respawnDelay: 2
+  explosionEffect: {fileID: 0}
   crashSound: {fileID: 0}
   gameOverPanel: {fileID: 0}
 --- !u!114 &1000000002
@@ -592,17 +486,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ScoreTracker
   pointsPerSecond: 10
-  distancePerSecond: 20
   distanceMultiplier: 1
-  hotdogBonus: 300
-  bigGulpBonus: 200
-  roadBeerBonus: 500
-  hornBonus: 50
-  smokingBonus: 400
   scoreText: {fileID: 0}
   distanceText: {fileID: 0}
   timeText: {fileID: 0}
-  scorePanel: {fileID: 0}
 --- !u!114 &1000000003
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -618,7 +505,6 @@ MonoBehaviour:
   eatCount: 18
   drinkCount: 14
   honkCount: 10
-  smokeCount: 20
 --- !u!1 &1000000010
 GameObject:
   m_ObjectHideFlags: 0
@@ -629,9 +515,6 @@ GameObject:
   m_Component:
   - component: {fileID: 1000000011}
   - component: {fileID: 1000000012}
-  - component: {fileID: 1000000014}
-  - component: {fileID: 1000000013}
-  - component: {fileID: 1000000015}
   m_Layer: 0
   m_Name: UI_Manager
   m_TagString: Untagged
@@ -673,65 +556,7 @@ MonoBehaviour:
   hotdogSprite: {fileID: 0}
   bigGulpSprite: {fileID: 0}
   roadBeerSprite: {fileID: 0}
-  cigaretteSprite: {fileID: 0}
   honkSprite: {fileID: 0}
---- !u!114 &1000000013
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1000000010}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f4222993b5cb74bd6a2e209a90b11c33, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::ControlsUI
-  toggleKey: 9
-  showOnStart: 1
-  autoHideDelay: 30
-  controlsPanel: {fileID: 0}
---- !u!114 &1000000014
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1000000010}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: dc41650cd8bf14804ae20a55f34dff57, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::TruckerInventoryUI
-  playerController: {fileID: 0}
-  inventoryPanel: {fileID: 0}
-  hotdogText: {fileID: 0}
-  bigGulpText: {fileID: 0}
-  roadBeerText: {fileID: 0}
-  cigaretteText: {fileID: 0}
-  hotdogIcon: {fileID: 0}
-  bigGulpIcon: {fileID: 0}
-  roadBeerIcon: {fileID: 0}
-  cigaretteIcon: {fileID: 0}
---- !u!114 &1000000015
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1000000010}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ff0257bb4562d4eb4b738e4e9071bef6, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::TruckerDash
-  dashSprite: {fileID: 21300000, guid: 2e1ca77c322557641bd5fb3f01dadd14, type: 3}
-  wheelSprite: {fileID: 21300000, guid: f39e5856fbcf746fb827e8449ae598e4, type: 3}
-  wheelRotationAngle: -35
-  wheelRotationSpeed: 4
-  wheelSize: {x: 500, y: 500}
-  wheelPosition: {x: -500, y: 250}
-  playerController: {fileID: 0}
 --- !u!1 &1000000020
 GameObject:
   m_ObjectHideFlags: 0
@@ -776,12 +601,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 30cfaa921bdc9443e93dffeeeabc0471, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::AudioManager
-  hornClip: {fileID: 8300000, guid: a1b2c3d4e5f6a7b8c9d0e1f2a3b4c5e6, type: 3}
-  eatClip: {fileID: 8300000, guid: c3d4e5f6a7b8c9d0e1f2a3b4c5d6e7a8, type: 3}
-  drinkClip: {fileID: 8300000, guid: d4e5f6a7b8c9d0e1f2a3b4c5d6e7f8b9, type: 3}
-  burpClip: {fileID: 8300000, guid: e5f6a7b8c9d0e1f2a3b4c5d6e7f8a9c0, type: 3}
-  crashClip: {fileID: 8300000, guid: b2c3d4e5f6a7b8c9d0e1f2a3b4c5d6f7, type: 3}
-  smokeClip: {fileID: 0}
+  hornClip: {fileID: 0}
+  eatClip: {fileID: 0}
+  drinkClip: {fileID: 0}
+  burpClip: {fileID: 0}
+  crashClip: {fileID: 0}
   sfxVolume: 1
   hornVolume: 0.85
 --- !u!1 &1000000030
@@ -810,8 +634,8 @@ Transform:
   m_GameObject: {fileID: 1000000030}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: -1.69, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 2}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
@@ -828,61 +652,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dcf8b481debfd3740b4fee1ab91751d6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::InfiniteRoadManager
-  roadChunkPrefab: {fileID: 480795831}
-  maxActiveChunks: 5
+  roadChunkPrefab: {fileID: 0}
   chunkLength: 100
-  spawnInterval: 1
-  roadYPosition: -1.7465
+  chunkWidth: 15
+  chunksAhead: 3
+  chunksBehind: 1
   roadSpeed: 20
-  spawnDistance: 300
-  despawnDistance: -50
-  playerTruck: {fileID: 2073721157}
---- !u!1 &1521592165
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1521592167}
-  - component: {fileID: 1521592166}
-  m_Layer: 0
-  m_Name: MainMenuUI
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!114 &1521592166
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1521592165}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 57b2e8e32008b444291546fcdab65d30, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::MainMenuUI
-  menuPanel: {fileID: 0}
---- !u!4 &1521592167
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1521592165}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1001 &1921177653
+  playerTruck: {fileID: 0}
+--- !u!1001 &1286722912
 PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
@@ -890,33 +667,86 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 735463873399177451, guid: 962e5a5b36e297d49be5ae6bccdbdc3d, type: 3}
-      propertyPath: beerVideo
-      value: 
-      objectReference: {fileID: 32900000, guid: de9faaa41436d83438a3e67d34ff3bd8, type: 3}
-    - target: {fileID: 735463873399177451, guid: 962e5a5b36e297d49be5ae6bccdbdc3d, type: 3}
-      propertyPath: bigGulpVideo
-      value: 
-      objectReference: {fileID: 32900000, guid: ab869988bfc7be64698a6fe2d1a651a2, type: 3}
-    - target: {fileID: 735463873399177451, guid: 962e5a5b36e297d49be5ae6bccdbdc3d, type: 3}
-      propertyPath: smokingVideo
-      value: 
-      objectReference: {fileID: 32900000, guid: 19ba8fcfb3fc8954fa7add1c2b7c0299, type: 3}
+    - target: {fileID: 4768185670249698064, guid: a3c5f4875687a6f409739eead1cb6e00, type: 3}
+      propertyPath: m_Name
+      value: RoadChunk
+      objectReference: {fileID: 0}
+    - target: {fileID: 8983267759934780835, guid: a3c5f4875687a6f409739eead1cb6e00, type: 3}
+      propertyPath: m_LocalScale.y
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8983267759934780835, guid: a3c5f4875687a6f409739eead1cb6e00, type: 3}
+      propertyPath: m_LocalScale.z
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 8983267759934780835, guid: a3c5f4875687a6f409739eead1cb6e00, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 1.32307
+      objectReference: {fileID: 0}
+    - target: {fileID: 8983267759934780835, guid: a3c5f4875687a6f409739eead1cb6e00, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: -1.7465
+      objectReference: {fileID: 0}
+    - target: {fileID: 8983267759934780835, guid: a3c5f4875687a6f409739eead1cb6e00, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 1.86152
+      objectReference: {fileID: 0}
+    - target: {fileID: 8983267759934780835, guid: a3c5f4875687a6f409739eead1cb6e00, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8983267759934780835, guid: a3c5f4875687a6f409739eead1cb6e00, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8983267759934780835, guid: a3c5f4875687a6f409739eead1cb6e00, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8983267759934780835, guid: a3c5f4875687a6f409739eead1cb6e00, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8983267759934780835, guid: a3c5f4875687a6f409739eead1cb6e00, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8983267759934780835, guid: a3c5f4875687a6f409739eead1cb6e00, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8983267759934780835, guid: a3c5f4875687a6f409739eead1cb6e00, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: a3c5f4875687a6f409739eead1cb6e00, type: 3}
+--- !u!1001 &1628544283
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
     - target: {fileID: 3176640589281121225, guid: 962e5a5b36e297d49be5ae6bccdbdc3d, type: 3}
       propertyPath: m_Name
       value: VideoOverlayManager
       objectReference: {fileID: 0}
     - target: {fileID: 5188507453681993514, guid: 962e5a5b36e297d49be5ae6bccdbdc3d, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 2.41092
+      value: -1.25
       objectReference: {fileID: 0}
     - target: {fileID: 5188507453681993514, guid: 962e5a5b36e297d49be5ae6bccdbdc3d, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0
+      value: 0.648
       objectReference: {fileID: 0}
     - target: {fileID: 5188507453681993514, guid: 962e5a5b36e297d49be5ae6bccdbdc3d, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 2.41092
+      value: -11.08884
       objectReference: {fileID: 0}
     - target: {fileID: 5188507453681993514, guid: 962e5a5b36e297d49be5ae6bccdbdc3d, type: 3}
       propertyPath: m_LocalRotation.w
@@ -1005,24 +835,11 @@ MonoBehaviour:
   - 0
   - 4.66
   laneChangeDuration: 2.5
-  forwardSpeed: 0
-  autoForward: 0
   hotdogsRemaining: 10
   bigGulpsRemaining: 5
   roadBeersRemaining: 6
   cigarettesRemaining: 20
-  eatDuration: 2
-  drinkDuration: 1.5
-  smokeDuration: 3
-  hornSound: {fileID: 0}
-  eatSound: {fileID: 0}
-  drinkSound: {fileID: 0}
-  burpSound: {fileID: 0}
-  truckerUI: {fileID: 0}
-  activityParticles: {fileID: 0}
-  dashOverlay: {fileID: 0}
   videoOverlay: {fileID: 0}
-  scoreTracker: {fileID: 0}
 --- !u!1001 &5343214846645156458
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1075,10 +892,6 @@ PrefabInstance:
       propertyPath: playerTruck
       value: 
       objectReference: {fileID: 2073721157}
-    - target: {fileID: 6887232587390059706, guid: a6f75dfb9fe4e8947853f5af7f58867e, type: 3}
-      propertyPath: maxActiveVehicles
-      value: 5
-      objectReference: {fileID: 0}
     - target: {fileID: 8803002382892746988, guid: a6f75dfb9fe4e8947853f5af7f58867e, type: 3}
       propertyPath: m_Name
       value: TrafficSpawner
@@ -1102,7 +915,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1100593707649286349, guid: 0c097825d5389384fa2e1fa0c315d871, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 1.6
+      value: 2.5
       objectReference: {fileID: 0}
     - target: {fileID: 1100593707649286349, guid: 0c097825d5389384fa2e1fa0c315d871, type: 3}
       propertyPath: m_LocalPosition.z
@@ -1138,7 +951,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3505154041230603132, guid: 0c097825d5389384fa2e1fa0c315d871, type: 3}
       propertyPath: m_Size.y
-      value: 0.5
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 3505154041230603132, guid: 0c097825d5389384fa2e1fa0c315d871, type: 3}
       propertyPath: m_IsTrigger
@@ -1179,12 +992,10 @@ SceneRoots:
   - {fileID: 330585546}
   - {fileID: 410087041}
   - {fileID: 832575519}
-  - {fileID: 1000000031}
-  - {fileID: 12174939}
+  - {fileID: 1286722912}
   - {fileID: 5343214846645156458}
   - {fileID: 8790498300027327805}
   - {fileID: 1000000011}
   - {fileID: 1000000021}
-  - {fileID: 1521592167}
-  - {fileID: 103134307}
-  - {fileID: 1921177653}
+  - {fileID: 1000000031}
+  - {fileID: 1628544283}
