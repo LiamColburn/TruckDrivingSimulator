@@ -579,15 +579,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::TruckerInventoryUI
   playerController: {fileID: 0}
+  hotdogIcon: {fileID: 21300000, guid: 3e48150e6573141d38dd391dd2da6c1f, type: 3}
+  bigGulpIcon: {fileID: 21300000, guid: ee6ecf63a49f542ce829a11e461b1815, type: 3}
+  roadBeerIcon: {fileID: 21300000, guid: b241e2e7170424ef7b3170a0a70ca810, type: 3}
+  cigaretteIcon: {fileID: 21300000, guid: 5d28691afb9a04ddeba7d0ec77f860ea, type: 3}
   inventoryPanel: {fileID: 0}
-  hotdogText: {fileID: 0}
-  bigGulpText: {fileID: 0}
-  roadBeerText: {fileID: 0}
-  cigaretteText: {fileID: 0}
-  hotdogIcon: {fileID: 0}
-  bigGulpIcon: {fileID: 0}
-  roadBeerIcon: {fileID: 0}
-  cigaretteIcon: {fileID: 0}
 --- !u!114 &1000000015
 MonoBehaviour:
   m_ObjectHideFlags: 0
