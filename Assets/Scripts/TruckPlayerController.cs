@@ -288,6 +288,7 @@ public class TruckPlayerController : MonoBehaviour
     [SerializeField] private ActivityParticles activityParticles;
     [SerializeField] private TruckerDash dashOverlay;
     [SerializeField] private TruckerVideoOverlay videoOverlay;
+    [SerializeField] private ScoreTracker scoreTracker;
 
     private AudioSource hornAudioSource;
     
@@ -318,6 +319,7 @@ public class TruckPlayerController : MonoBehaviour
         if (activityParticles == null) activityParticles = GetComponentInChildren<ActivityParticles>();
         if (dashOverlay == null) dashOverlay = FindFirstObjectByType<TruckerDash>();
         if (videoOverlay == null) videoOverlay = FindFirstObjectByType<TruckerVideoOverlay>();
+        if (scoreTracker == null) scoreTracker = GetComponent<ScoreTracker>();
 
         Debug.Log("Truck driver ready! Controls: A/D or Arrow Keys = Change Lanes, H = Hotdog, G = Big Gulp, B = Road Beer, Space = Horn");
     }
@@ -359,7 +361,8 @@ public class TruckPlayerController : MonoBehaviour
         {
             DrinkRoadBeer();
         }
-        
+        // TODO: smoking keybind goes here → SmokeCigarette(); scoreTracker?.AddBonus(scoreTracker.smokingBonus);
+
         // Horn (can honk anytime - one hand is always free)
         if (Input.GetKeyDown(KeyCode.Space))
         {
@@ -452,6 +455,7 @@ public class TruckPlayerController : MonoBehaviour
         activityParticles?.SpawnEatBurst();
         AudioManager.Instance?.PlayEat();
         videoOverlay?.PlayHotdogVideo();
+        scoreTracker?.AddBonus(scoreTracker.hotdogBonus);
     }
  
     void DrinkBigGulp()
@@ -480,6 +484,7 @@ public class TruckPlayerController : MonoBehaviour
         activityParticles?.SpawnDrinkBurst();
         AudioManager.Instance?.PlayDrink();
         videoOverlay?.PlayBigGulpVideo();
+        scoreTracker?.AddBonus(scoreTracker.bigGulpBonus);
     }
  
     void DrinkRoadBeer()
@@ -508,6 +513,7 @@ public class TruckPlayerController : MonoBehaviour
         activityParticles?.SpawnDrinkBurst();
         videoOverlay?.PlayBeerVideo();
         AudioManager.Instance?.PlayDrink();
+        scoreTracker?.AddBonus(scoreTracker.roadBeerBonus);
 
         // Road beers make you drive slightly wonky (optional effect)
         StartCoroutine(RoadBeerEffect());
@@ -531,6 +537,7 @@ public class TruckPlayerController : MonoBehaviour
         truckerUI?.ShowHonk();
         activityParticles?.SpawnHonkPuff();
         AudioManager.Instance?.PlayHorn();
+        scoreTracker?.AddBonus(scoreTracker.hornBonus);
     }
  
     void HandleActivities()

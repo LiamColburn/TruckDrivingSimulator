@@ -91,7 +91,14 @@ public class ScoreTracker : MonoBehaviour
     [SerializeField] private float pointsPerSecond = 10f;
     [SerializeField] private float distancePerSecond = 20f; // Simulated speed (match road/traffic speed)
     [SerializeField] private float distanceMultiplier = 0.5f;
-    
+
+    [Header("Activity Bonuses")]
+    public int hotdogBonus = 300;
+    public int bigGulpBonus = 200;
+    public int roadBeerBonus = 500;
+    public int hornBonus = 50;
+    public int smokingBonus = 400;
+
     [Header("UI (auto-created if null)")]
     [SerializeField] private TextMeshProUGUI scoreText;
     [SerializeField] private TextMeshProUGUI distanceText;
@@ -103,6 +110,7 @@ public class ScoreTracker : MonoBehaviour
     private float distanceTraveled = 0f;
     private float timeSurvived = 0f;
     private bool isPlaying = true;
+    private Coroutine flashCoroutine;
 
     void Awake()
     {
@@ -125,8 +133,8 @@ public class ScoreTracker : MonoBehaviour
         // This represents how far the truck "would have" traveled
         distanceTraveled += distancePerSecond * Time.deltaTime;
         
-        // Calculate score: time bonus + distance bonus
-        score = (timeSurvived * pointsPerSecond) + (distanceTraveled * distanceMultiplier);
+        // Accumulate score incrementally; AddBonus() adds directly to score so each bonus counts exactly once
+        score += (pointsPerSecond + distancePerSecond * distanceMultiplier) * Time.deltaTime;
         
         // Update UI
         UpdateUI();
@@ -169,6 +177,60 @@ public class ScoreTracker : MonoBehaviour
     public float GetTime() => timeSurvived;
     public int GetScoreInt() => Mathf.FloorToInt(score);
     public int GetDistanceInt() => Mathf.FloorToInt(distanceTraveled);
+
+    public void AddBonus(int points)
+    {
+        score += points;
+        if (flashCoroutine != null) StopCoroutine(flashCoroutine);
+        flashCoroutine = StartCoroutine(FlashScoreText());
+        StartCoroutine(SpawnBonusPopup(points));
+    }
+
+    private System.Collections.IEnumerator FlashScoreText()
+    {
+        if (scoreText == null) yield break;
+        scoreText.color = Color.yellow;
+        yield return new WaitForSeconds(0.5f);
+        scoreText.color = new Color(1f, 0.95f, 0.7f);
+    }
+
+    private System.Collections.IEnumerator SpawnBonusPopup(int points)
+    {
+        Canvas canvas = hudCanvas != null ? hudCanvas : FindFirstObjectByType<Canvas>();
+        if (canvas == null) yield break;
+
+        GameObject popupGO = new GameObject("BonusPopup");
+        popupGO.transform.SetParent(canvas.transform, false);
+
+        TextMeshProUGUI popup = popupGO.AddComponent<TextMeshProUGUI>();
+        popup.text = $"+{points} pts";
+        popup.fontSize = 52f;
+        popup.fontStyle = FontStyles.Bold;
+        popup.alignment = TextAlignmentOptions.Center;
+        popup.color = new Color(1f, 0.95f, 0.7f);
+
+        RectTransform rt = popupGO.GetComponent<RectTransform>();
+        rt.anchorMin = new Vector2(0.5f, 0.5f);
+        rt.anchorMax = new Vector2(0.5f, 0.5f);
+        rt.pivot     = new Vector2(0.5f, 0.5f);
+        rt.sizeDelta = new Vector2(300f, 70f);
+        rt.anchoredPosition = new Vector2(0f, 0f);
+
+        Vector2 startPos = rt.anchoredPosition;
+        float duration = 1f;
+        float elapsed  = 0f;
+
+        while (elapsed < duration)
+        {
+            elapsed += Time.deltaTime;
+            float t = elapsed / duration;
+            rt.anchoredPosition = startPos + new Vector2(0f, 40f * t);
+            popup.color = new Color(1f, 0.95f, 0.7f, 1f - t);
+            yield return null;
+        }
+
+        Destroy(popupGO);
+    }
 
     // ── UI Auto-Build ─────────────────────────────────────────────────────────
 
