@@ -315,7 +315,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::CameraFollow
   target: {fileID: 0}
-  offset: {x: 0, y: 5, z: -10}
+  offset: {x: 0, y: 1.5, z: 0}
   positionSmoothSpeed: 5
   bobSpeed: 1.2
   bobY: 0.03
@@ -515,7 +515,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::TruckCollision
   enableGameOver: 1
   respawnDelay: 2
-  explosionEffect: {fileID: 0}
   crashSound: {fileID: 0}
   gameOverPanel: {fileID: 0}
 --- !u!114 &1000000002
@@ -531,10 +530,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ScoreTracker
   pointsPerSecond: 10
+  distancePerSecond: 20
   distanceMultiplier: 1
   scoreText: {fileID: 0}
   distanceText: {fileID: 0}
   timeText: {fileID: 0}
+  scorePanel: {fileID: 0}
 --- !u!114 &1000000003
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -560,6 +561,9 @@ GameObject:
   m_Component:
   - component: {fileID: 1000000011}
   - component: {fileID: 1000000012}
+  - component: {fileID: 1000000014}
+  - component: {fileID: 1000000013}
+  - component: {fileID: 1000000015}
   m_Layer: 0
   m_Name: UI_Manager
   m_TagString: Untagged
@@ -602,6 +606,61 @@ MonoBehaviour:
   bigGulpSprite: {fileID: 0}
   roadBeerSprite: {fileID: 0}
   honkSprite: {fileID: 0}
+--- !u!114 &1000000013
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1000000010}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f4222993b5cb74bd6a2e209a90b11c33, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ControlsUI
+  toggleKey: 9
+  showOnStart: 1
+  autoHideDelay: 5
+  controlsPanel: {fileID: 0}
+--- !u!114 &1000000014
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1000000010}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dc41650cd8bf14804ae20a55f34dff57, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::TruckerInventoryUI
+  playerController: {fileID: 0}
+  inventoryPanel: {fileID: 0}
+  hotdogText: {fileID: 0}
+  bigGulpText: {fileID: 0}
+  roadBeerText: {fileID: 0}
+  hotdogIcon: {fileID: 0}
+  bigGulpIcon: {fileID: 0}
+  roadBeerIcon: {fileID: 0}
+--- !u!114 &1000000015
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1000000010}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ff0257bb4562d4eb4b738e4e9071bef6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::TruckerDash
+  dashSprite: {fileID: 21300000, guid: 2e1ca77c322557641bd5fb3f01dadd14, type: 3}
+  wheelSprite: {fileID: 21300000, guid: 7ace966bc08a444568f620bc81ede91e, type: 3}
+  wheelRotationAngle: -35
+  wheelRotationSpeed: 4
+  wheelSize: {x: 500, y: 500}
+  wheelPosition: {x: -500, y: 250}
+  playerController: {fileID: 0}
 --- !u!1 &1000000020
 GameObject:
   m_ObjectHideFlags: 0
@@ -646,11 +705,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 30cfaa921bdc9443e93dffeeeabc0471, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::AudioManager
-  hornClip: {fileID: 0}
-  eatClip: {fileID: 0}
-  drinkClip: {fileID: 0}
-  burpClip: {fileID: 0}
-  crashClip: {fileID: 0}
+  hornClip: {fileID: 8300000, guid: a1b2c3d4e5f6a7b8c9d0e1f2a3b4c5e6, type: 3}
+  eatClip: {fileID: 8300000, guid: c3d4e5f6a7b8c9d0e1f2a3b4c5d6e7a8, type: 3}
+  drinkClip: {fileID: 8300000, guid: d4e5f6a7b8c9d0e1f2a3b4c5d6e7f8b9, type: 3}
+  burpClip: {fileID: 8300000, guid: e5f6a7b8c9d0e1f2a3b4c5d6e7f8a9c0, type: 3}
+  crashClip: {fileID: 8300000, guid: b2c3d4e5f6a7b8c9d0e1f2a3b4c5d6f7, type: 3}
   sfxVolume: 1
   hornVolume: 0.85
 --- !u!1 &1000000030
@@ -697,13 +756,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dcf8b481debfd3740b4fee1ab91751d6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::InfiniteRoadManager
-  roadChunkPrefab: {fileID: 0}
+  roadChunkPrefab: {fileID: 100100000, guid: a3c5f4875687a6f409739eead1cb6e00, type: 3}
   chunkLength: 100
   chunkWidth: 15
   chunksAhead: 3
   chunksBehind: 1
   roadSpeed: 20
-  playerTruck: {fileID: 0}
+  playerTruck: {fileID: 2073721157}
 --- !u!1001 &1286722912
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -814,6 +873,63 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1001 &1921177653
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 3176640589281121225, guid: 962e5a5b36e297d49be5ae6bccdbdc3d, type: 3}
+      propertyPath: m_Name
+      value: VideoOverlayManager
+      objectReference: {fileID: 0}
+    - target: {fileID: 5188507453681993514, guid: 962e5a5b36e297d49be5ae6bccdbdc3d, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 2.41092
+      objectReference: {fileID: 0}
+    - target: {fileID: 5188507453681993514, guid: 962e5a5b36e297d49be5ae6bccdbdc3d, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5188507453681993514, guid: 962e5a5b36e297d49be5ae6bccdbdc3d, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 2.41092
+      objectReference: {fileID: 0}
+    - target: {fileID: 5188507453681993514, guid: 962e5a5b36e297d49be5ae6bccdbdc3d, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5188507453681993514, guid: 962e5a5b36e297d49be5ae6bccdbdc3d, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5188507453681993514, guid: 962e5a5b36e297d49be5ae6bccdbdc3d, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5188507453681993514, guid: 962e5a5b36e297d49be5ae6bccdbdc3d, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5188507453681993514, guid: 962e5a5b36e297d49be5ae6bccdbdc3d, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5188507453681993514, guid: 962e5a5b36e297d49be5ae6bccdbdc3d, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5188507453681993514, guid: 962e5a5b36e297d49be5ae6bccdbdc3d, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 962e5a5b36e297d49be5ae6bccdbdc3d, type: 3}
 --- !u!1 &2073721153 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 3620546173800811610, guid: 0c097825d5389384fa2e1fa0c315d871, type: 3}
@@ -880,8 +996,9 @@ MonoBehaviour:
   drinkSound: {fileID: 0}
   burpSound: {fileID: 0}
   truckerUI: {fileID: 0}
-  cameraFollow: {fileID: 0}
   activityParticles: {fileID: 0}
+  dashOverlay: {fileID: 0}
+  videoOverlay: {fileID: 0}
 --- !u!1001 &5343214846645156458
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1042,3 +1159,4 @@ SceneRoots:
   - {fileID: 1000000031}
   - {fileID: 1521592167}
   - {fileID: 103134307}
+  - {fileID: 1921177653}
