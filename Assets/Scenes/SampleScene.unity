@@ -532,6 +532,11 @@ MonoBehaviour:
   pointsPerSecond: 10
   distancePerSecond: 20
   distanceMultiplier: 1
+  hotdogBonus: 300
+  bigGulpBonus: 200
+  roadBeerBonus: 500
+  hornBonus: 50
+  smokingBonus: 400
   scoreText: {fileID: 0}
   distanceText: {fileID: 0}
   timeText: {fileID: 0}
@@ -999,6 +1004,7 @@ MonoBehaviour:
   activityParticles: {fileID: 0}
   dashOverlay: {fileID: 0}
   videoOverlay: {fileID: 0}
+  scoreTracker: {fileID: 0}
 --- !u!1001 &5343214846645156458
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1124,7 +1130,8 @@ PrefabInstance:
       propertyPath: m_TagString
       value: Player
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 3271624185880575819, guid: 0c097825d5389384fa2e1fa0c315d871, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents:
