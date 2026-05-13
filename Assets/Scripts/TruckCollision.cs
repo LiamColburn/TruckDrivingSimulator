@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
@@ -21,10 +22,14 @@ public class TruckCollision : MonoBehaviour
     [Header("UI")]
     [SerializeField] private GameObject gameOverPanel;
 
+    [Header("Crash Animation")]
+    [SerializeField] private float crashAnimDuration = 2.5f;
+
     private AudioSource audioSource;
     private bool hasCrashed = false;
     private int crashCount = 0;
     private TrafficSpawner trafficSpawner;
+    private CameraFollow cameraFollow;
 
     void Start()
     {
@@ -38,6 +43,7 @@ public class TruckCollision : MonoBehaviour
         if (gameOverPanel != null) gameOverPanel.SetActive(false);
 
         trafficSpawner = FindFirstObjectByType<TrafficSpawner>();
+        cameraFollow   = FindFirstObjectByType<CameraFollow>();
     }
 
     void OnCollisionEnter(Collision collision)
@@ -87,12 +93,39 @@ public class TruckCollision : MonoBehaviour
 
         if (enableGameOver)
         {
-            ShowGameOver();
+            StartCoroutine(CrashSequence());
         }
         else
         {
             Invoke("Respawn", respawnDelay);
         }
+    }
+
+    IEnumerator CrashSequence()
+    {
+        cameraFollow?.TriggerCrashShake(crashAnimDuration);
+
+        // Full-screen red flash overlay
+        var flashCanvas = UITheme.BuildCanvas("CrashFlash", 98);
+        var flashGO     = new GameObject("Flash");
+        flashGO.transform.SetParent(flashCanvas.transform, false);
+        UITheme.StretchToFill(flashGO.AddComponent<RectTransform>());
+        var flashImg          = flashGO.AddComponent<Image>();
+        flashImg.raycastTarget = false;
+
+        float elapsed = 0f;
+        while (elapsed < crashAnimDuration)
+        {
+            float t     = elapsed / crashAnimDuration;
+            // Hold full red for first 12% of duration, then fade to clear
+            float alpha = t < 0.12f ? 0.72f : Mathf.Lerp(0.72f, 0f, (t - 0.12f) / 0.88f);
+            flashImg.color = new Color(0.85f, 0.08f, 0.04f, alpha);
+            elapsed += Time.unscaledDeltaTime;
+            yield return null;
+        }
+
+        Destroy(flashCanvas.gameObject);
+        ShowGameOver();
     }
 
     void ShowGameOver()

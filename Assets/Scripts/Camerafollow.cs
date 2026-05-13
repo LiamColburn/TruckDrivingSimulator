@@ -31,6 +31,9 @@ public class CameraFollow : MonoBehaviour
     [SerializeField] private float fovPulseSpeed     = 0.65f;
     [SerializeField] private float fovEffectDuration = 5f;
 
+    [Header("Crash Shake")]
+    [SerializeField] private float crashShakeMagnitude = 0.25f;
+
     private Camera     cam;
     private Quaternion baseRotation;
     private float      normalFOV;
@@ -39,7 +42,11 @@ public class CameraFollow : MonoBehaviour
     private float   targetTilt     = 0f;
     private bool    fovActive      = false;
     private float   fovElapsed     = 0f;
-    private Vector3 followedPosition;  // lerp result before bob — keeps bob from drifting into the lerp
+    private Vector3 followedPosition;
+
+    private float shakeEndTime   = -1f;
+    private float shakeDuration  = 1f;
+    private float shakeMagnitude = 0f;
 
     void Start()
     {
@@ -107,11 +114,32 @@ public class CameraFollow : MonoBehaviour
     void ApplyBob()
     {
         float t = Time.time * bobSpeed;
-        transform.position = followedPosition + new Vector3(
+        Vector3 pos = followedPosition + new Vector3(
             Mathf.Sin(t * 0.65f) * bobX,
             Mathf.Sin(t)         * bobY,
             0f
         );
+
+        // Crash shake — fades out linearly over the shake duration
+        if (Time.unscaledTime < shakeEndTime)
+        {
+            float remaining = shakeEndTime - Time.unscaledTime;
+            float intensity = shakeMagnitude * (remaining / shakeDuration);
+            pos += new Vector3(
+                Random.Range(-intensity, intensity),
+                Random.Range(-intensity, intensity),
+                0f
+            );
+        }
+
+        transform.position = pos;
+    }
+
+    public void TriggerCrashShake(float duration)
+    {
+        shakeDuration  = duration;
+        shakeMagnitude = crashShakeMagnitude;
+        shakeEndTime   = Time.unscaledTime + duration;
     }
 
     void ApplyTilt()
