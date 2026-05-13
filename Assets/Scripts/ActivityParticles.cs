@@ -33,6 +33,7 @@ public class ActivityParticles : MonoBehaviour
         main.startSize        = new ParticleSystem.MinMaxCurve(0.08f, 0.22f);
         main.startColor       = color;
         main.maxParticles     = count;
+        main.loop             = false;
         main.playOnAwake      = false;
         main.stopAction       = ParticleSystemStopAction.Destroy;
         main.simulationSpace  = ParticleSystemSimulationSpace.World;
