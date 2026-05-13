@@ -382,6 +382,7 @@ MonoBehaviour:
   fovPulseAmount: 5
   fovPulseSpeed: 0.65
   fovEffectDuration: 5
+  crashShakeMagnitude: 0.25
 --- !u!1 &410087039
 GameObject:
   m_ObjectHideFlags: 0
@@ -579,6 +580,7 @@ MonoBehaviour:
   respawnDelay: 2
   crashSound: {fileID: 0}
   gameOverPanel: {fileID: 0}
+  crashAnimDuration: 2.5
 --- !u!114 &1000000002
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -782,8 +784,14 @@ MonoBehaviour:
   burpClip: {fileID: 8300000, guid: e5f6a7b8c9d0e1f2a3b4c5d6e7f8a9c0, type: 3}
   crashClip: {fileID: 8300000, guid: b2c3d4e5f6a7b8c9d0e1f2a3b4c5d6f7, type: 3}
   smokeClip: {fileID: 0}
+  musicClips:
+  - {fileID: 8300000, guid: 0154d4728f3edcc4f8919acdb06e970d, type: 3}
+  - {fileID: 8300000, guid: fc6f5c957c6404b419f168cbd58c567b, type: 3}
+  - {fileID: 8300000, guid: c6bf98ee234dd0c479140ae604428e50, type: 3}
+  - {fileID: 8300000, guid: 978aa941850560245b53ff16b6dfab1b, type: 3}
   sfxVolume: 1
   hornVolume: 0.85
+  musicVolume: 0.2
 --- !u!1 &1000000030
 GameObject:
   m_ObjectHideFlags: 0
@@ -837,6 +845,59 @@ MonoBehaviour:
   spawnDistance: 300
   despawnDistance: -50
   playerTruck: {fileID: 2073721157}
+--- !u!1 &1044176299
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1044176301}
+  - component: {fileID: 1044176300}
+  m_Layer: 0
+  m_Name: ScenerySpawner
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1044176300
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1044176299}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f1871dcfb2bfc1c41a631a11bedef903, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::RoadsideScenerySpawner
+  scrollSpeed: 20
+  spawnDistance: 140
+  despawnDistance: -60
+  minSpacingZ: 28
+  maxActiveItems: 28
+  spawnInterval: 1
+  roadClearance: 9.5
+  maxOutwardSpread: 18
+  playerTruck: {fileID: 2073721157}
+--- !u!4 &1044176301
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1044176299}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1521592165
 GameObject:
   m_ObjectHideFlags: 0
@@ -1204,3 +1265,4 @@ SceneRoots:
   - {fileID: 1521592167}
   - {fileID: 103134307}
   - {fileID: 1921177653}
+  - {fileID: 1044176301}
