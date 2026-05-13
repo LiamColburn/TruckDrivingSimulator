@@ -22,6 +22,7 @@ public class TruckerUI : MonoBehaviour
     [SerializeField] private Sprite hotdogSprite;
     [SerializeField] private Sprite bigGulpSprite;
     [SerializeField] private Sprite roadBeerSprite;
+    [SerializeField] private Sprite cigaretteSprite;
     [SerializeField] private Sprite honkSprite;
 
     private Canvas hudCanvas;
@@ -56,6 +57,12 @@ public class TruckerUI : MonoBehaviour
         ShowToast("Crackin' a cold one!", roadBeerSprite, duration, new Color(1f, 0.85f, 0.25f));
         Flash(new Color(1f, 0.6f, 0f, 0.25f));
         TriggerVignette(duration + 5f);
+    }
+
+    public void ShowSmoking(float duration)
+    {
+        ShowToast("Lightin' up a smoke!", cigaretteSprite, duration, new Color(0.85f, 0.85f, 0.9f));
+        Flash(new Color(0.7f, 0.7f, 0.8f, 0.12f));
     }
 
     public void ShowHonk()

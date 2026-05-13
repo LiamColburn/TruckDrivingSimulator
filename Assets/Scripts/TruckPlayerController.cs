@@ -274,8 +274,10 @@ public class TruckPlayerController : MonoBehaviour
     [SerializeField] private int hotdogsRemaining = 10;
     [SerializeField] private int bigGulpsRemaining = 5;
     [SerializeField] private int roadBeersRemaining = 6;
+    [SerializeField] private int cigarettesRemaining = 20;
     [SerializeField] private float eatDuration = 2f;
     [SerializeField] private float drinkDuration = 1.5f;
+    [SerializeField] private float smokeDuration = 3f;
     
     [Header("Audio")]
     [SerializeField] private AudioClip hornSound;
@@ -288,12 +290,14 @@ public class TruckPlayerController : MonoBehaviour
     [SerializeField] private ActivityParticles activityParticles;
     [SerializeField] private TruckerDash dashOverlay;
     [SerializeField] private TruckerVideoOverlay videoOverlay;
+    [SerializeField] private ScoreTracker scoreTracker;
 
     private AudioSource hornAudioSource;
     
     // Internal state
     private bool isEating = false;
     private bool isDrinking = false;
+    private bool isSmoking = false;
     private float activityTimer = 0f;
     private bool isChangingLanes = false;
     
@@ -301,6 +305,7 @@ public class TruckPlayerController : MonoBehaviour
     private int hotdogsEaten = 0;
     private int bigGulpsDrank = 0;
     private int roadBeersDrank = 0;
+    private int cigarettesSmoked = 0;
     private int hornsHonked = 0;
     
     void Start()
@@ -318,8 +323,9 @@ public class TruckPlayerController : MonoBehaviour
         if (activityParticles == null) activityParticles = GetComponentInChildren<ActivityParticles>();
         if (dashOverlay == null) dashOverlay = FindFirstObjectByType<TruckerDash>();
         if (videoOverlay == null) videoOverlay = FindFirstObjectByType<TruckerVideoOverlay>();
+        if (scoreTracker == null) scoreTracker = GetComponent<ScoreTracker>();
 
-        Debug.Log("Truck driver ready! Controls: A/D or Arrow Keys = Change Lanes, H = Hotdog, G = Big Gulp, B = Road Beer, Space = Horn");
+        Debug.Log("Truck driver ready! Controls: A/D or Arrow Keys = Change Lanes, H = Hotdog, G = Big Gulp, B = Road Beer, C = Cigarette, Space = Horn");
     }
  
     void Update()
@@ -332,8 +338,8 @@ public class TruckPlayerController : MonoBehaviour
  
     void HandleInput()
     {
-        // Can't do anything while eating, drinking, or changing lanes
-        if (isEating || isDrinking || isChangingLanes)
+        // Can't do anything while eating, drinking, smoking, or changing lanes
+        if (isEating || isDrinking || isSmoking || isChangingLanes)
             return;
         
         // Lane changing - A/D or Arrow Keys
@@ -359,7 +365,12 @@ public class TruckPlayerController : MonoBehaviour
         {
             DrinkRoadBeer();
         }
-        
+        else if (Input.GetKeyDown(KeyCode.C))
+        {
+            SmokeCigarette();
+        }
+
+
         // Horn (can honk anytime - one hand is always free)
         if (Input.GetKeyDown(KeyCode.Space))
         {
@@ -421,11 +432,39 @@ public class TruckPlayerController : MonoBehaviour
     {
         if (!autoForward)
             return;
-        
+
         // Move forward automatically (if enabled)
         transform.Translate(Vector3.forward * forwardSpeed * Time.deltaTime);
     }
- 
+
+    void SmokeCigarette()
+    {
+        if (cigarettesRemaining <= 0)
+        {
+            Debug.Log("Out of cigarettes! Time to quit.");
+            return;
+        }
+
+        if (isEating || isDrinking || isSmoking)
+        {
+            Debug.Log("Already got your hands full!");
+            return;
+        }
+
+        cigarettesRemaining--;
+        cigarettesSmoked++;
+        isSmoking = true;
+        activityTimer = smokeDuration;
+
+        Debug.Log($"Lightin' up a cigarette... ({cigarettesRemaining} left)");
+
+        truckerUI?.ShowSmoking(smokeDuration);
+        activityParticles?.SpawnSmokePuff();
+        AudioManager.Instance?.PlaySmoke();
+        videoOverlay?.PlaySmokingVideo();
+        scoreTracker?.AddBonus(scoreTracker.smokingBonus);
+    }
+
     void EatHotdog()
     {
         if (hotdogsRemaining <= 0)
@@ -433,18 +472,18 @@ public class TruckPlayerController : MonoBehaviour
             Debug.Log("Out of hotdogs! You should've packed more.");
             return;
         }
-        
-        if (isEating || isDrinking)
+
+        if (isEating || isDrinking || isSmoking)
         {
             Debug.Log("Already got your hands full!");
             return;
         }
-        
+
         hotdogsRemaining--;
         hotdogsEaten++;
         isEating = true;
         activityTimer = eatDuration;
-        
+
         Debug.Log($"Munchin' on a hotdog... ({hotdogsRemaining} left)");
 
         PlaySound(eatSound);
@@ -452,6 +491,7 @@ public class TruckPlayerController : MonoBehaviour
         activityParticles?.SpawnEatBurst();
         AudioManager.Instance?.PlayEat();
         videoOverlay?.PlayHotdogVideo();
+        scoreTracker?.AddBonus(scoreTracker.hotdogBonus);
     }
  
     void DrinkBigGulp()
@@ -462,12 +502,12 @@ public class TruckPlayerController : MonoBehaviour
             return;
         }
         
-        if (isEating || isDrinking)
+        if (isEating || isDrinking || isSmoking)
         {
             Debug.Log("Already got your hands full!");
             return;
         }
-        
+
         bigGulpsRemaining--;
         bigGulpsDrank++;
         isDrinking = true;
@@ -480,6 +520,7 @@ public class TruckPlayerController : MonoBehaviour
         activityParticles?.SpawnDrinkBurst();
         AudioManager.Instance?.PlayDrink();
         videoOverlay?.PlayBigGulpVideo();
+        scoreTracker?.AddBonus(scoreTracker.bigGulpBonus);
     }
  
     void DrinkRoadBeer()
@@ -490,12 +531,12 @@ public class TruckPlayerController : MonoBehaviour
             return;
         }
         
-        if (isEating || isDrinking)
+        if (isEating || isDrinking || isSmoking)
         {
             Debug.Log("Already got your hands full!");
             return;
         }
-        
+
         roadBeersRemaining--;
         roadBeersDrank++;
         isDrinking = true;
@@ -508,6 +549,7 @@ public class TruckPlayerController : MonoBehaviour
         activityParticles?.SpawnDrinkBurst();
         videoOverlay?.PlayBeerVideo();
         AudioManager.Instance?.PlayDrink();
+        scoreTracker?.AddBonus(scoreTracker.roadBeerBonus);
 
         // Road beers make you drive slightly wonky (optional effect)
         StartCoroutine(RoadBeerEffect());
@@ -531,17 +573,18 @@ public class TruckPlayerController : MonoBehaviour
         truckerUI?.ShowHonk();
         activityParticles?.SpawnHonkPuff();
         AudioManager.Instance?.PlayHorn();
+        scoreTracker?.AddBonus(scoreTracker.hornBonus);
     }
  
     void HandleActivities()
     {
-        if (isEating || isDrinking)
+        if (isEating || isDrinking || isSmoking)
         {
             activityTimer -= Time.deltaTime;
             
             if (activityTimer <= 0)
             {
-                // Finish eating/drinking
+                // Finish eating/drinking/smoking
                 if (isEating)
                 {
                     Debug.Log("Finished that hotdog. Delicious!");
@@ -553,6 +596,11 @@ public class TruckPlayerController : MonoBehaviour
                     PlaySound(burpSound);
                     AudioManager.Instance?.PlayBurp();
                     isDrinking = false;
+                }
+                else if (isSmoking)
+                {
+                    Debug.Log("*Exhales smoke* That's the stuff.");
+                    isSmoking = false;
                 }
             }
         }
@@ -596,10 +644,12 @@ public class TruckPlayerController : MonoBehaviour
     public int GetCurrentLane() => currentLane;
     public bool IsEating() => isEating;
     public bool IsDrinking() => isDrinking;
+    public bool IsSmoking() => isSmoking;
     public bool IsChangingLanes() => isChangingLanes;
     public int GetHotdogsRemaining() => hotdogsRemaining;
     public int GetBigGulpsRemaining() => bigGulpsRemaining;
     public int GetRoadBeersRemaining() => roadBeersRemaining;
+    public int GetCigarettesRemaining() => cigarettesRemaining;
  
     // Restock at gas stations
     public void Restock()
@@ -607,6 +657,7 @@ public class TruckPlayerController : MonoBehaviour
         hotdogsRemaining = 10;
         bigGulpsRemaining = 5;
         roadBeersRemaining = 6;
+        cigarettesRemaining = 20;
         
         Debug.Log("Restocked at the gas station!");
         //UpdateUI();
