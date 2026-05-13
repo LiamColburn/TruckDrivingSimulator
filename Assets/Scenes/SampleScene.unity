@@ -1023,6 +1023,18 @@ MonoBehaviour:
   dashOverlay: {fileID: 0}
   videoOverlay: {fileID: 0}
   scoreTracker: {fileID: 0}
+--- !u!114 &2073721164
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2073721153}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 12adeaa2f71c512489b04091e3d66144, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::TruckHeadlights
 --- !u!1001 &5343214846645156458
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1152,7 +1164,8 @@ PrefabInstance:
       propertyPath: m_TagString
       value: Player
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 3271624185880575819, guid: 0c097825d5389384fa2e1fa0c315d871, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents:
@@ -1171,6 +1184,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 3620546173800811610, guid: 0c097825d5389384fa2e1fa0c315d871, type: 3}
       insertIndex: -1
       addedObject: {fileID: 1000000003}
+    - targetCorrespondingSourceObject: {fileID: 3620546173800811610, guid: 0c097825d5389384fa2e1fa0c315d871, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 2073721164}
   m_SourcePrefab: {fileID: 100100000, guid: 0c097825d5389384fa2e1fa0c315d871, type: 3}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
