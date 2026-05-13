@@ -655,7 +655,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::TruckerDash
   dashSprite: {fileID: 21300000, guid: 2e1ca77c322557641bd5fb3f01dadd14, type: 3}
-  wheelSprite: {fileID: 21300000, guid: 7ace966bc08a444568f620bc81ede91e, type: 3}
+  wheelSprite: {fileID: 21300000, guid: f39e5856fbcf746fb827e8449ae598e4, type: 3}
   wheelRotationAngle: -35
   wheelRotationSpeed: 4
   wheelSize: {x: 500, y: 500}
