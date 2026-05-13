@@ -383,6 +383,59 @@ MonoBehaviour:
   fovPulseSpeed: 0.65
   fovEffectDuration: 5
   crashShakeMagnitude: 0.25
+--- !u!1 &336390655
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 336390657}
+  - component: {fileID: 336390656}
+  m_Layer: 0
+  m_Name: LampSpawner
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &336390656
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 336390655}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 03a44348492cc4a47a479d45f9d8fc71, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::StreetLampSpawner
+  streetLampPrefab: {fileID: 4243357371535590602, guid: 35acd0a171dffe74da8b383b16fd9565, type: 3}
+  spawnInterval: 4.5
+  spawnDistanceAhead: 300
+  lampRightX: 7.5
+  lampLeftX: -7.5
+  lampY: 0.17
+  lampSpeed: 45
+  despawnDistance: -50
+  playerTruck: {fileID: 2073721157}
+--- !u!4 &336390657
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 336390655}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 7.15677, y: -0.0535, z: 13.86935}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &410087039
 GameObject:
   m_ObjectHideFlags: 0
@@ -779,7 +832,7 @@ MonoBehaviour:
   drinkClip: {fileID: 8300000, guid: d4e5f6a7b8c9d0e1f2a3b4c5d6e7f8b9, type: 3}
   burpClip: {fileID: 8300000, guid: e5f6a7b8c9d0e1f2a3b4c5d6e7f8a9c0, type: 3}
   crashClip: {fileID: 8300000, guid: b2c3d4e5f6a7b8c9d0e1f2a3b4c5d6f7, type: 3}
-  smokeClip: {fileID: 0}
+  smokeClip: {fileID: 8300000, guid: adf7f7c186eb91541b54a88035d9913a, type: 3}
   musicClips:
   - {fileID: 8300000, guid: 0154d4728f3edcc4f8919acdb06e970d, type: 3}
   - {fileID: 8300000, guid: fc6f5c957c6404b419f168cbd58c567b, type: 3}
@@ -1262,3 +1315,4 @@ SceneRoots:
   - {fileID: 103134307}
   - {fileID: 1921177653}
   - {fileID: 1044176301}
+  - {fileID: 336390657}
